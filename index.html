@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Elie & Sarah — Wedding Invitation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
@@ -35,6 +35,9 @@
         }
     </script>
     <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -87,6 +90,7 @@
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
         .toast.show {
             transform: translateY(0);
@@ -297,6 +301,21 @@
             opacity: 0.5;
             margin: 0.2rem auto;
         }
+        
+        /* Mobile optimization */
+        @media (max-width: 640px) {
+            input, textarea, button {
+                font-size: 16px !important;
+            }
+            .rsvp-input {
+                font-size: 16px;
+            }
+        }
+        
+        /* Prevent double-tap zoom on buttons */
+        button, a, .attendance-option {
+            touch-action: manipulation;
+        }
     </style>
 </head>
 <body class="bg-paper font-sans text-accent overflow-x-hidden" dir="ltr">
@@ -314,7 +333,7 @@
         </div>
     </div>
 
-    <audio id="bg-music" loop preload="auto">
+    <audio id="bg-music" loop preload="none">
         <source src="wedding-song .mp3" type="audio/mpeg">
     </audio>
 
@@ -339,7 +358,6 @@
             <p class="font-display text-base md:text-lg font-bold text-accent/80 tracking-wide eng-verse">إِذًا لَيْسَا بَعْدُ اثْنَيْنِ بَلْ جَسَدًا وَاحِدًا. فَالَّذِي جَمَعَهُ اللهُ لاَ يُفَرِّقْهُ إِنْسَانٌ.</p>
             <p class="font-display text-base md:text-lg font-bold text-accent/80 tracking-wide ar-verse hidden">So they are no longer two, but one flesh. Therefore what God has joined together, let no one separate.</p>
             
-            <!-- Updated Family Names: each on its own line -->
             <div class="family-names mt-5">
                 <p class="font-display text-xl md:text-2xl font-semibold text-gold-dark tracking-wide eng-family-line-1">The family Tannous</p>
                 <div class="family-line-divider"></div>
@@ -395,7 +413,7 @@
         </div>
     </section>
 
-    <!-- OUR STORY SECTION (unchanged) -->
+    <!-- OUR STORY SECTION -->
     <section class="relative py-24 px-6 bg-paper">
         <div class="max-w-6xl mx-auto">
             <div class="scroll-animate text-center mb-12">
@@ -454,7 +472,7 @@
         </div>
     </section>
 
-    <!-- COUNTDOWN SECTION, EVENT DETAILS, VENUE, GIFTS (unchanged) -->
+    <!-- COUNTDOWN SECTION -->
     <section id="countdown" class="relative py-24 px-6 bg-paper/80">
         <div class="max-w-4xl mx-auto text-center">
             <div class="scroll-animate">
@@ -488,6 +506,7 @@
         </div>
     </section>
 
+    <!-- EVENT DETAILS, VENUE, GIFTS sections (condensed for brevity - same as original) -->
     <section class="relative py-24 px-6 bg-paper/95">
         <div class="max-w-5xl mx-auto">
             <div class="scroll-animate text-center mb-16">
@@ -614,7 +633,7 @@
         </div>
     </section>
 
-    <!-- RSVP SECTION - WHATSAPP VERSION (EmailJS replaced) -->
+    <!-- RSVP SECTION - FIXED FOR MOBILE (no readonly, optimized touch) -->
     <section id="rsvp" class="relative py-24 px-6 bg-paper/95">
         <div class="relative max-w-xl mx-auto">
             <div class="scroll-animate text-center mb-12">
@@ -625,19 +644,21 @@
                 <p class="text-accent/60 mt-4 text-sm ar-rsvp-deadline hidden">يرجى الرد بحلول 1 أغسطس 2026</p>
             </div>
             
-            <form id="rsvp-form" class="scroll-animate bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-10 border border-gold-pale/30 shadow-lg">
+            <form id="rsvp-form" class="scroll-animate bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-10 border border-gold-pale/30 shadow-lg">
                 <div class="space-y-5">
+                    <!-- Name field - NOW EDITABLE (removed readonly) -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-name-label">Full Name <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-2 ar-name-label hidden">الاسم الكامل <span class="text-gold">*</span></label>
-                        <input type="text" id="rsvp-name" required placeholder="Your full name" class="rsvp-input w-full px-4 py-3 bg-white/70 border border-gold-pale/40 rounded-xl" readonly>
+                        <input type="text" id="rsvp-name" required placeholder="Your full name" class="rsvp-input w-full px-4 py-3 bg-white/70 border border-gold-pale/40 rounded-xl">
                     </div>
                     
+                    <!-- Attendance radio buttons -->
                     <div>
                         <label class="block text-sm font-medium mb-3 eng-attend-label">Will you attend? <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-3 ar-attend-label hidden">هل ستحضر؟ <span class="text-gold">*</span></label>
                         <div class="grid grid-cols-2 gap-3">
-                            <label class="attendance-option cursor-pointer">
+                            <label class="attendance-option cursor-pointer block">
                                 <input type="radio" name="attendance" value="Yes, I will be there! 🎉" class="hidden peer" required>
                                 <div class="peer-checked:bg-accent peer-checked:text-paper bg-white/70 border border-gold-pale/40 rounded-xl py-3 text-center text-sm font-medium transition-all duration-200">
                                     <span class="iconify inline-block mr-1" data-icon="lucide:heart" data-width="14"></span>
@@ -645,7 +666,7 @@
                                     <span class="ar-accept hidden">أقبل بفرح</span>
                                 </div>
                             </label>
-                            <label class="attendance-option cursor-pointer">
+                            <label class="attendance-option cursor-pointer block">
                                 <input type="radio" name="attendance" value="No, regretfully I cannot make it. 😔" class="hidden peer">
                                 <div class="peer-checked:bg-accent peer-checked:text-paper bg-white/70 border border-gold-pale/40 rounded-xl py-3 text-center text-sm font-medium transition-all duration-200">
                                     <span class="iconify inline-block mr-1" data-icon="lucide:heart-crack" data-width="14"></span>
@@ -656,16 +677,18 @@
                         </div>
                     </div>
                     
+                    <!-- Guests section -->
                     <div id="guests-section" style="display: none;">
                         <label class="block text-sm font-medium mb-2 eng-guests-label">Number of Guests (including yourself)</label>
                         <label class="block text-sm font-medium mb-2 ar-guests-label hidden">عدد الضيوف (بما في ذلك نفسك)</label>
                         <div class="flex items-center gap-3">
-                            <button type="button" id="decrement-guests" class="w-10 h-10 rounded-full bg-white/80 border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center"><span class="iconify" data-icon="lucide:minus" data-width="16"></span></button>
+                            <button type="button" id="decrement-guests" class="w-10 h-10 rounded-full bg-white/80 border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center touch-manipulation"><span class="iconify" data-icon="lucide:minus" data-width="16"></span></button>
                             <input type="number" id="rsvp-guests" value="1" min="1" max="10" class="rsvp-input w-24 text-center px-2 py-3 bg-white/70 border border-gold-pale/40 rounded-xl">
-                            <button type="button" id="increment-guests" class="w-10 h-10 rounded-full bg-white/80 border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center"><span class="iconify" data-icon="lucide:plus" data-width="16"></span></button>
+                            <button type="button" id="increment-guests" class="w-10 h-10 rounded-full bg-white/80 border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center touch-manipulation"><span class="iconify" data-icon="lucide:plus" data-width="16"></span></button>
                         </div>
                     </div>
                     
+                    <!-- Message field -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-message-label">Message for the Couple (optional)</label>
                         <label class="block text-sm font-medium mb-2 ar-message-label hidden">رسالة للعروسين (اختياري)</label>
@@ -673,7 +696,7 @@
                     </div>
                 </div>
                 
-                <button type="submit" id="submitBtn" class="w-full mt-8 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-semibold text-sm tracking-wider uppercase transition-colors flex items-center justify-center gap-2">
+                <button type="submit" id="submitBtn" class="w-full mt-8 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-semibold text-sm tracking-wider uppercase transition-colors flex items-center justify-center gap-2 touch-manipulation">
                     <span class="iconify" data-icon="logos:whatsapp-icon" data-width="18"></span>
                     <span class="eng-send">Send RSVP via WhatsApp</span>
                     <span class="ar-send hidden">إرسال عبر واتساب</span>
@@ -682,7 +705,7 @@
         </div>
     </section>
 
-    <!-- FOOTER unchanged -->
+    <!-- FOOTER -->
     <footer class="relative py-16 px-6 text-center">
         <div class="absolute inset-0 bg-accent"></div>
         <div class="relative z-10">
@@ -699,112 +722,264 @@
     </footer>
 
     <script>
-        // Music & welcome overlay
-        const audio = document.getElementById('bg-music');
-        const musicBtn = document.getElementById('music-toggle');
-        const musicIcon = document.getElementById('music-icon');
-        const welcomeOverlay = document.getElementById('welcomeOverlay');
-        let isMusicPlaying = false;
-        audio.volume = 0.25;
-        function startMusic() { if (!isMusicPlaying) { audio.play().then(() => { isMusicPlaying = true; musicIcon.setAttribute('data-icon', 'lucide:volume-2'); musicBtn.classList.remove('music-pulse'); }).catch(e => console.log); } }
-        function stopMusic() { if (isMusicPlaying) { audio.pause(); isMusicPlaying = false; musicIcon.setAttribute('data-icon', 'lucide:volume-x'); musicBtn.classList.add('music-pulse'); } }
-        musicBtn.addEventListener('click', (e) => { e.stopPropagation(); isMusicPlaying ? stopMusic() : startMusic(); });
-        function dismissOverlay() { startMusic(); welcomeOverlay.style.opacity = '0'; setTimeout(() => welcomeOverlay.style.display = 'none', 500); }
-        welcomeOverlay.addEventListener('click', dismissOverlay);
-        document.getElementById('enterButton').addEventListener('click', (e) => { e.stopPropagation(); dismissOverlay(); });
-		// --- NEW: Read URL Parameters and Auto-fill the Form ---
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
+        (function() {
+            // Music & welcome overlay
+            const audio = document.getElementById('bg-music');
+            const musicBtn = document.getElementById('music-toggle');
+            const musicIcon = document.getElementById('music-icon');
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
+            let isMusicPlaying = false;
             
-            // Extract parameters from the link (?name=youssef&seats=3)
-            const guestName = urlParams.get('name');
-            const partySize = urlParams.get('seats');
-
-            // 1. Fill the Name input field
-            if (guestName) {
-                document.getElementById('rsvp-name').value = decodeURIComponent(guestName).trim();
+            if (audio) {
+                audio.volume = 0.25;
             }
             
-            // 2. Fill the Guest Counter input field and show the hidden section
-            if (partySize) {
-                const guestsInput = document.getElementById('rsvp-guests');
-                const guestsSection = document.getElementById('guests-section');
+            function startMusic() { 
+                if (!isMusicPlaying && audio) { 
+                    audio.play().then(() => { 
+                        isMusicPlaying = true; 
+                        if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2'); 
+                        if (musicBtn) musicBtn.classList.remove('music-pulse'); 
+                    }).catch(function(e) { 
+                        console.log('Audio play failed:', e); 
+                    }); 
+                } 
+            }
+            
+            function stopMusic() { 
+                if (isMusicPlaying && audio) { 
+                    audio.pause(); 
+                    isMusicPlaying = false; 
+                    if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x'); 
+                    if (musicBtn) musicBtn.classList.add('music-pulse'); 
+                } 
+            }
+            
+            if (musicBtn) {
+                musicBtn.addEventListener('click', function(e) { 
+                    e.stopPropagation(); 
+                    isMusicPlaying ? stopMusic() : startMusic(); 
+                });
+            }
+            
+            function dismissOverlay() { 
+                startMusic(); 
+                if (welcomeOverlay) {
+                    welcomeOverlay.style.opacity = '0'; 
+                    setTimeout(function() { 
+                        if (welcomeOverlay) welcomeOverlay.style.display = 'none'; 
+                    }, 500);
+                }
+            }
+            
+            if (welcomeOverlay) {
+                welcomeOverlay.addEventListener('click', dismissOverlay);
+            }
+            const enterBtn = document.getElementById('enterButton');
+            if (enterBtn) {
+                enterBtn.addEventListener('click', function(e) { 
+                    e.stopPropagation(); 
+                    dismissOverlay(); 
+                });
+            }
+            
+            // Auto-fill from URL parameters (name and seats)
+            function fillFromURL() {
+                try {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const guestName = urlParams.get('name');
+                    const partySize = urlParams.get('seats');
+                    
+                    const nameInput = document.getElementById('rsvp-name');
+                    if (guestName && nameInput) {
+                        nameInput.value = decodeURIComponent(guestName).trim();
+                    }
+                    
+                    if (partySize) {
+                        const guestsField = document.getElementById('rsvp-guests');
+                        const guestsSection = document.getElementById('guests-section');
+                        if (guestsField) {
+                            guestsField.value = partySize;
+                        }
+                        if (guestsSection) {
+                            guestsSection.style.display = 'block';
+                        }
+                    }
+                } catch(e) {
+                    console.log('URL param parsing error:', e);
+                }
+            }
+            
+            // Countdown
+            function updateCountdown() { 
+                const wedding = new Date('2026-08-08T18:00:00'); 
+                const now = new Date(); 
+                const diff = wedding - now; 
+                if (diff <= 0) { 
+                    const daysEl = document.getElementById('cd-days');
+                    const hoursEl = document.getElementById('cd-hours');
+                    const minutesEl = document.getElementById('cd-minutes');
+                    const secondsEl = document.getElementById('cd-seconds');
+                    if (daysEl) daysEl.textContent = '🎉'; 
+                    if (hoursEl) hoursEl.textContent = '🎉'; 
+                    if (minutesEl) minutesEl.textContent = '🎉'; 
+                    if (secondsEl) secondsEl.textContent = '🎉'; 
+                    return; 
+                } 
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24)); 
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24); 
+                const minutes = Math.floor((diff / 1000 / 60) % 60); 
+                const seconds = Math.floor((diff / 1000) % 60); 
+                const daysEl = document.getElementById('cd-days');
+                const hoursEl = document.getElementById('cd-hours');
+                const minutesEl = document.getElementById('cd-minutes');
+                const secondsEl = document.getElementById('cd-seconds');
+                if (daysEl) daysEl.textContent = days; 
+                if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0'); 
+                if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0'); 
+                if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0'); 
+            }
+            
+            updateCountdown(); 
+            setInterval(updateCountdown, 1000);
+            
+            // Scroll animation
+            const observer = new IntersectionObserver(function(entries) { 
+                entries.forEach(function(entry) { 
+                    if (entry.isIntersecting) entry.target.classList.add('visible'); 
+                }); 
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.scroll-animate').forEach(function(el) { 
+                observer.observe(el); 
+            });
+            
+            // Guests counter
+            const guestsInput = document.getElementById('rsvp-guests');
+            const decrementBtn = document.getElementById('decrement-guests');
+            const incrementBtn = document.getElementById('increment-guests');
+            
+            if (decrementBtn) {
+                decrementBtn.addEventListener('click', function() { 
+                    let val = parseInt(guestsInput ? guestsInput.value : 1); 
+                    if (val > 1 && guestsInput) guestsInput.value = val - 1; 
+                });
+            }
+            if (incrementBtn) {
+                incrementBtn.addEventListener('click', function() { 
+                    let val = parseInt(guestsInput ? guestsInput.value : 1); 
+                    if (val < 10 && guestsInput) guestsInput.value = val + 1; 
+                });
+            }
+            if (guestsInput) {
+                guestsInput.addEventListener('change', function() { 
+                    let val = parseInt(guestsInput.value); 
+                    if (isNaN(val) || val < 1) guestsInput.value = 1; 
+                    if (val > 10) guestsInput.value = 10; 
+                });
+            }
+            
+            // Show guests section based on attendance
+            const attendanceRadios = document.querySelectorAll('input[name="attendance"]');
+            attendanceRadios.forEach(function(radio) { 
+                radio.addEventListener('change', function() { 
+                    const guestsSection = document.getElementById('guests-section');
+                    if (guestsSection) {
+                        if (this.value.includes('Yes')) {
+                            guestsSection.style.display = 'block';
+                        } else {
+                            guestsSection.style.display = 'none';
+                        }
+                    }
+                }); 
+            });
+            
+            // Toast notification
+            function showToast(message, isError) {
+                const toast = document.getElementById('toast');
+                const toastMsg = document.getElementById('toast-message');
+                if (toast && toastMsg) {
+                    toastMsg.textContent = message;
+                    toast.classList.remove('bg-red-800', 'bg-accent');
+                    toast.classList.add(isError ? 'bg-red-800' : 'bg-accent');
+                    toast.classList.add('show');
+                    setTimeout(function() { toast.classList.remove('show'); }, 4000);
+                }
+            }
+            
+            // WhatsApp handler
+            const form = document.getElementById('rsvp-form');
+            const WHATSAPP_NUMBER = "9613985722"; // Change to your number
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const fullName = document.getElementById('rsvp-name');
+                    const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
+                    const guestsField = document.getElementById('rsvp-guests');
+                    const messageField = document.getElementById('rsvp-message');
+                    
+                    const nameValue = fullName ? fullName.value.trim() : '';
+                    let guests = guestsField ? guestsField.value : '1';
+                    const messageText = messageField ? messageField.value.trim() : '';
+                    
+                    if (!nameValue) { 
+                        showToast('Please enter your full name', true); 
+                        return; 
+                    }
+                    if (!attendanceRadio) { 
+                        showToast('Please select whether you will attend', true); 
+                        return; 
+                    }
+                    
+                    const attendanceResponse = attendanceRadio.value;
+                    let guestInfo = '';
+                    if (attendanceResponse.includes('Yes')) {
+                        guestInfo = '\n👥 *Number of Guests:* ' + guests + ' person(s) (including yourself)';
+                    }
+                    const optionalMsg = messageText ? '\n💬 *Message:* ' + messageText : '';
+                    const whatsappMessage = '✨ *WEDDING RSVP - Elie & Sarah* ✨\n\n👤 *Guest:* ' + nameValue + '\n💌 *Response:* ' + attendanceResponse + guestInfo + optionalMsg + '\n\n📅 *Wedding Date:* August 8, 2026\n📍 *Church:* Mar Chalita, Andaket at 7:00 PM\n🎉 *Reception:* Diwan Al Wadi';
+                    
+                    const encoded = encodeURIComponent(whatsappMessage);
+                    const whatsappUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encoded;
+                    window.open(whatsappUrl, '_blank');
+                    showToast('Opening WhatsApp for ' + nameValue + '...', false);
+                });
+            }
+            
+            // Language toggle
+            let isArabic = false;
+            const toggleBtn = document.getElementById('languageToggle');
+            
+            function setLanguage(arabic) { 
+                isArabic = arabic; 
+                document.body.dir = arabic ? 'rtl' : 'ltr'; 
+                if (arabic) document.body.classList.add('font-arabic'); 
+                else document.body.classList.remove('font-arabic');
                 
-                // Set the number counter to what's in the link
-                guestsInput.value = partySize;
+                const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-1,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-find-way,.eng-venues,.eng-ceremony-label,.eng-church-desc,.eng-reception-label,.eng-restaurant-desc,.eng-directions,.eng-directions2,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text';
+                const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-1,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-find-way,.ar-venues,.ar-ceremony-label,.ar-church-desc,.ar-reception-label,.ar-restaurant-desc,.ar-directions,.ar-directions2,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text';
                 
-                // Force the hidden Tailwind block to show up
-                guestsSection.style.display = 'block'; 
+                document.querySelectorAll(engSelectors).forEach(function(el) { el.classList.toggle('hidden', arabic); });
+                document.querySelectorAll(arSelectors).forEach(function(el) { el.classList.toggle('hidden', !arabic); });
+                
+                if (toggleBtn) {
+                    const toggleText = toggleBtn.querySelector('.toggle-text');
+                    const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+                    if (toggleText) toggleText.textContent = arabic ? 'English' : 'عربي';
+                    if (toggleIcon) toggleIcon.textContent = arabic ? '🇬🇧' : '🇦🇪';
+                }
             }
-        });
-        
-        // Countdown
-        function updateCountdown() { const wedding = new Date('2026-08-08T18:00:00'); const now = new Date(); const diff = wedding - now; if (diff <= 0) { document.getElementById('cd-days').textContent = '🎉'; document.getElementById('cd-hours').textContent = '🎉'; document.getElementById('cd-minutes').textContent = '🎉'; document.getElementById('cd-seconds').textContent = '🎉'; return; } const days = Math.floor(diff / (1000 * 60 * 60 * 24)); const hours = Math.floor((diff / (1000 * 60 * 60)) % 24); const minutes = Math.floor((diff / 1000 / 60) % 60); const seconds = Math.floor((diff / 1000) % 60); document.getElementById('cd-days').textContent = days; document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0'); document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0'); document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0'); }
-        updateCountdown(); setInterval(updateCountdown, 1000);
-        
-        // Scroll animation
-        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
-        document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
-        
-        // Guests counter
-        const guestsInput = document.getElementById('rsvp-guests'); const decrementBtn = document.getElementById('decrement-guests'); const incrementBtn = document.getElementById('increment-guests');
-        decrementBtn.addEventListener('click', () => { let val = parseInt(guestsInput.value); if (val > 1) guestsInput.value = val - 1; });
-        incrementBtn.addEventListener('click', () => { let val = parseInt(guestsInput.value); if (val < 10) guestsInput.value = val + 1; });
-        guestsInput.addEventListener('change', () => { let val = parseInt(guestsInput.value); if (isNaN(val) || val < 1) guestsInput.value = 1; if (val > 10) guestsInput.value = 10; });
-        
-        // Show guests section based on attendance
-        document.querySelectorAll('input[name="attendance"]').forEach(radio => { radio.addEventListener('change', function() { const guestsSection = document.getElementById('guests-section'); if (this.value.includes('Yes')) { guestsSection.style.display = 'block'; } else { guestsSection.style.display = 'none'; } }); });
-        
-        // Toast
-        function showToast(message, isError = false) { const toast = document.getElementById('toast'); const toastMsg = document.getElementById('toast-message'); toastMsg.textContent = message; toast.classList.remove('bg-red-800', 'bg-accent'); toast.classList.add(isError ? 'bg-red-800' : 'bg-accent'); toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 4000); }
-        
-        // WhatsApp RSVP handler
-        const form = document.getElementById('rsvp-form');
-        const submitBtn = document.getElementById('submitBtn');
-        // Replace with your actual WhatsApp number (including country code, no '+' sign)
-        const WHATSAPP_NUMBER = "71909979"; // <-- CHANGE THIS TO YOUR PHONE NUMBER (e.g., "96171234567" for Lebanon)
-        
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const fullName = document.getElementById('rsvp-name').value.trim();
-            const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
-            let guests = document.getElementById('rsvp-guests').value;
-            const messageText = document.getElementById('rsvp-message').value.trim();
             
-            if (!fullName) { showToast('Please enter your full name', true); return; }
-            if (!attendanceRadio) { showToast('Please select whether you will attend', true); return; }
-            
-            const attendanceResponse = attendanceRadio.value;
-            let guestInfo = '';
-            if (attendanceResponse.includes('Yes')) {
-                guestInfo = `\n👥 *Number of Guests:* ${guests} person(s) (including yourself)`;
-            } else {
-                guestInfo = '';
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() { setLanguage(!isArabic); });
             }
-            const optionalMsg = messageText ? `\n💬 *Message:* ${messageText}` : '';
-            const whatsappMessage = `✨ *WEDDING RSVP - Elie & Sarah* ✨\n\n👤 *Guest:* ${fullName}\n💌 *Response:* ${attendanceResponse}${guestInfo}${optionalMsg}\n\n📅 *Wedding Date:* August 8, 2026\n📍 *Church:* Mar Chalita, Andaket at 7:00 PM\n🎉 *Reception:* Diwan Al Wadi`;
+            setLanguage(false);
             
-            const encoded = encodeURIComponent(whatsappMessage);
-            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
-            window.open(whatsappUrl, '_blank');
-            showToast(`Opening WhatsApp for ${fullName}...`, false);
-            //form.reset();
-           // document.getElementById('guests-section').style.display = 'none';
-            //document.getElementById('rsvp-guests').value = '1';
-        });
-        
-        // Language toggle
-        let isArabic = false;
-        const toggleBtn = document.getElementById('languageToggle');
-        function setLanguage(arabic) { 
-            isArabic = arabic; document.body.dir = arabic ? 'rtl' : 'ltr'; 
-            if (arabic) document.body.classList.add('font-arabic'); else document.body.classList.remove('font-arabic');
-            const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-1,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-find-way,.eng-venues,.eng-ceremony-label,.eng-church-desc,.eng-reception-label,.eng-restaurant-desc,.eng-directions,.eng-directions2,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text';
-            const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-1,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-find-way,.ar-venues,.ar-ceremony-label,.ar-church-desc,.ar-reception-label,.ar-restaurant-desc,.ar-directions,.ar-directions2,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text';
-            document.querySelectorAll(engSelectors).forEach(el => el.classList.toggle('hidden', arabic)); document.querySelectorAll(arSelectors).forEach(el => el.classList.toggle('hidden', !arabic));
-            toggleBtn.querySelector('.toggle-text').textContent = arabic ? 'English' : 'عربي'; toggleBtn.querySelector('.toggle-icon').textContent = arabic ? '🇬🇧' : '🇦🇪';
-        }
-        toggleBtn.addEventListener('click', () => setLanguage(!isArabic)); setLanguage(false);
+            // Execute URL fill after DOM is ready
+            fillFromURL();
+        })();
     </script>
 </body>
 </html>
