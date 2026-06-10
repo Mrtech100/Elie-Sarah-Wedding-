@@ -630,7 +630,7 @@
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-name-label">Full Name <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-2 ar-name-label hidden">الاسم الكامل <span class="text-gold">*</span></label>
-                        <input type="text" id="rsvp-name" required placeholder="Your full name" class="rsvp-input w-full px-4 py-3 bg-white/70 border border-gold-pale/40 rounded-xl">
+                        <input type="text" id="rsvp-name" required placeholder="Your full name" class="rsvp-input w-full px-4 py-3 bg-white/70 border border-gold-pale/40 rounded-xl" readonly>
                     </div>
                     
                     <div>
@@ -712,6 +712,31 @@
         function dismissOverlay() { startMusic(); welcomeOverlay.style.opacity = '0'; setTimeout(() => welcomeOverlay.style.display = 'none', 500); }
         welcomeOverlay.addEventListener('click', dismissOverlay);
         document.getElementById('enterButton').addEventListener('click', (e) => { e.stopPropagation(); dismissOverlay(); });
+		// --- NEW: Read URL Parameters and Auto-fill the Form ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Extract parameters from the link (?name=youssef&seats=3)
+            const guestName = urlParams.get('name');
+            const partySize = urlParams.get('seats');
+
+            // 1. Fill the Name input field
+            if (guestName) {
+                document.getElementById('rsvp-name').value = decodeURIComponent(guestName).trim();
+            }
+            
+            // 2. Fill the Guest Counter input field and show the hidden section
+            if (partySize) {
+                const guestsInput = document.getElementById('rsvp-guests');
+                const guestsSection = document.getElementById('guests-section');
+                
+                // Set the number counter to what's in the link
+                guestsInput.value = partySize;
+                
+                // Force the hidden Tailwind block to show up
+                guestsSection.style.display = 'block'; 
+            }
+        });
         
         // Countdown
         function updateCountdown() { const wedding = new Date('2026-08-08T18:00:00'); const now = new Date(); const diff = wedding - now; if (diff <= 0) { document.getElementById('cd-days').textContent = '🎉'; document.getElementById('cd-hours').textContent = '🎉'; document.getElementById('cd-minutes').textContent = '🎉'; document.getElementById('cd-seconds').textContent = '🎉'; return; } const days = Math.floor(diff / (1000 * 60 * 60 * 24)); const hours = Math.floor((diff / (1000 * 60 * 60)) % 24); const minutes = Math.floor((diff / 1000 / 60) % 60); const seconds = Math.floor((diff / 1000) % 60); document.getElementById('cd-days').textContent = days; document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0'); document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0'); document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0'); }
@@ -763,9 +788,9 @@
             const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
             window.open(whatsappUrl, '_blank');
             showToast(`Opening WhatsApp for ${fullName}...`, false);
-            form.reset();
-            document.getElementById('guests-section').style.display = 'none';
-            document.getElementById('rsvp-guests').value = '1';
+            //form.reset();
+           // document.getElementById('guests-section').style.display = 'none';
+            //document.getElementById('rsvp-guests').value = '1';
         });
         
         // Language toggle
