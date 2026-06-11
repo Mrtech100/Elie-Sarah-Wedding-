@@ -61,13 +61,18 @@
         @media (max-width: 640px) { input, textarea, button { font-size: 16px !important; } .rsvp-input { font-size: 16px; } }
         button, a, .attendance-option { touch-action: manipulation; }
 
-        /* Locked field style: subtle visual hint */
+        /* Locked field style for name */
         .locked-field {
             background-color: #eef2ef !important;
             color: #2F3E35 !important;
             cursor: default !important;
             border-color: #c0ccbb !important;
             opacity: 0.85;
+        }
+        /* Semi-locked for guests: can reduce but not exceed max */
+        .semi-locked-field {
+            background-color: #faf9f7 !important;
+            border-color: #d1cabb !important;
         }
         .readonly-hint {
             font-size: 0.7rem;
@@ -79,6 +84,67 @@
         }
         .readonly-hint .iconify {
             font-size: 12px;
+        }
+        /* Custom number controls styling for better UX */
+        .guest-control-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border: 1px solid #e2dcd3;
+            border-radius: 9999px;
+            padding: 0 8px;
+            width: fit-content;
+            background-color: #fefcf8;
+        }
+        .guest-btn {
+            background: #f0ede8;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #5a4e3c;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .guest-btn:hover:not(:disabled) {
+            background-color: #e3dbcf;
+            transform: scale(0.96);
+        }
+        .guest-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .guest-number-input {
+            width: 60px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            padding: 8px 0;
+            font-family: 'Outfit', monospace;
+        }
+        .guest-number-input:focus {
+            outline: none;
+        }
+        .guest-number-input::-webkit-inner-spin-button, 
+        .guest-number-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .guest-number-input[type=number] {
+            -moz-appearance: textfield;
+        }
+        @media (max-width: 640px) {
+            .guest-btn { width: 40px; height: 40px; font-size: 22px; }
+            .guest-number-input { width: 55px; font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -148,7 +214,7 @@
         </div>
     </section>
 
-    <!-- OUR STORY SECTION (shortened but complete) -->
+    <!-- OUR STORY SECTION -->
     <section class="relative py-24 px-6 bg-paper">
         <div class="max-w-6xl mx-auto">
             <div class="scroll-animate text-center mb-12"><p class="font-hand text-2xl text-gold mb-2 eng-story-sub">Once upon a time</p><p class="font-hand text-2xl text-gold mb-2 ar-story-sub hidden">كان يا مكان</p><h2 class="font-display text-3xl md:text-5xl tracking-tight eng-story-title">Our Story</h2><h2 class="font-display text-3xl md:text-5xl tracking-tight ar-story-title hidden">قصتنا</h2><div class="w-24 h-px bg-gold-pale/60 mx-auto mt-4"></div></div>
@@ -159,14 +225,31 @@
     <!-- COUNTDOWN SECTION -->
     <section id="countdown" class="relative py-24 px-6 bg-paper/80"><div class="max-w-4xl mx-auto text-center"><div class="scroll-animate"><p class="font-hand text-2xl text-gold mb-2 eng-countdown-label">Counting down to our day</p><p class="font-hand text-2xl text-gold mb-2 ar-countdown-label hidden">العد التنازلي ليوم زفافنا</p><h2 class="font-display text-3xl md:text-5xl tracking-tight mb-12 eng-big-day">The Big Day</h2><h2 class="font-display text-3xl md:text-5xl tracking-tight mb-12 ar-big-day hidden">اليوم الكبير</h2></div><div class="scroll-animate grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"><div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30"><span id="cd-days" class="font-display text-5xl md:text-6xl text-accent block">000</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-days">Days</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-days hidden">يوم</span></div><div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30"><span id="cd-hours" class="font-display text-5xl md:text-6xl text-accent block">00</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-hours">Hours</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-hours hidden">ساعة</span></div><div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30"><span id="cd-minutes" class="font-display text-5xl md:text-6xl text-accent block">00</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-minutes">Minutes</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-minutes hidden">دقيقة</span></div><div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30"><span id="cd-seconds" class="font-display text-5xl md:text-6xl text-accent block">00</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-seconds">Seconds</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-seconds hidden">ثانية</span></div></div></div></section>
 
-    <!-- EVENTS, VENUES, GIFT sections (minimal) -->
+    <!-- EVENTS, VENUES, GIFT sections -->
     <section class="relative py-24 px-6 bg-paper/95"><div class="max-w-5xl mx-auto"><div class="scroll-animate text-center mb-16"><p class="font-hand text-2xl text-gold mb-2 eng-celebrate">Join us for</p><p class="font-hand text-2xl text-gold mb-2 ar-celebrate hidden">انضموا إلينا</p><h2 class="font-display text-3xl md:text-5xl tracking-tight eng-celebrate-title">The Celebration</h2><h2 class="font-display text-3xl md:text-5xl tracking-tight ar-celebrate-title hidden">الاحتفال</h2></div><div class="grid md:grid-cols-2 gap-8"><div class="scroll-animate group"><div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gold-pale/30 text-center"><div class="w-16 h-16 bg-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6"><span class="iconify text-accent" data-icon="lucide:church" data-width="28"></span></div><p class="font-hand text-lg text-gold mb-1 eng-ceremony-time">7:00 PM</p><p class="font-hand text-lg text-gold mb-1 ar-ceremony-time hidden">السابعة مساءً</p><h3 class="font-display text-2xl mb-4 eng-ceremony-title">Ceremony</h3><h3 class="font-display text-2xl mb-4 ar-ceremony-title hidden">مراسم الزفاف</h3><p class="text-accent/70 text-sm leading-relaxed mb-4 eng-ceremony-location">Mar Chalita Church<br>Andaket, Akkar</p><p class="text-accent/70 text-sm leading-relaxed mb-4 ar-ceremony-location hidden">كنيسة مار شليتا<br>عندقت - عكار</p><p class="text-gold text-xs tracking-wider uppercase eng-ceremony-dress">Formal Attire</p><p class="text-gold text-xs tracking-wider uppercase ar-ceremony-dress hidden">لباس رسمي</p></div></div><div class="scroll-animate group"><div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gold-pale/30 text-center"><div class="w-16 h-16 bg-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6"><span class="iconify text-accent" data-icon="lucide:party-popper" data-width="28"></span></div><p class="font-hand text-lg text-gold mb-1 eng-party-time">After Ceremony</p><p class="font-hand text-lg text-gold mb-1 ar-party-time hidden">بعد المراسم</p><h3 class="font-display text-2xl mb-4 eng-party-title">Party & Reception</h3><h3 class="font-display text-2xl mb-4 ar-party-title hidden">حفل الاستقبال</h3><p class="text-accent/70 text-sm leading-relaxed mb-4 eng-party-location">Diwan Al Wadi Restaurant<br>Qoubaiyat, Qatlabah</p><p class="text-accent/70 text-sm leading-relaxed mb-4 ar-party-location hidden">مطعم ديوان الوادي<br>قوبيات - قطلبّة</p><p class="text-gold text-xs tracking-wider uppercase eng-party-desc">Dinner & Dancing</p><p class="text-gold text-xs tracking-wider uppercase ar-party-desc hidden">عشاء ورقص</p></div></div></div></div></section>
 
-    <section class="relative py-24 px-6 bg-paper"><div class="max-w-5xl mx-auto"><div class="scroll-animate text-center mb-16"><p class="font-hand text-2xl text-gold mb-2 eng-find-way">Find your way</p><p class="font-hand text-2xl text-gold mb-2 ar-find-way hidden">اعرفوا الطريق</p><h2 class="font-display text-3xl md:text-5xl tracking-tight eng-venues">The Venues</h2><h2 class="font-display text-3xl md:text-5xl tracking-tight ar-venues hidden">أماكن الاحتفال</h2></div><div class="grid md:grid-cols-2 gap-8"><div><div class="bg-white/60 rounded-3xl overflow-hidden border border-gold-pale/30"><img src="image/mar chalita.jpg" class="w-full aspect-[16/10] object-cover"><div class="p-8"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 bg-accent/5 rounded-xl flex items-center justify-center"><span class="iconify text-accent" data-icon="lucide:church"></span></div><div><p class="font-hand text-sm text-gold eng-ceremony-label">Ceremony · 7:00 PM</p><p class="font-hand text-sm text-gold ar-ceremony-label hidden">مراسم الزفاف · 7:00 مساءً</p><h3 class="font-display text-2xl">Mar Chalita Church</h3></div></div><a href="https://maps.app.goo.gl/u7YsfAqKx8QGYDoD9" target="_blank" class="inline-flex items-center gap-2 bg-accent text-paper px-5 py-2.5 rounded-xl text-sm"><span class="iconify" data-icon="lucide:navigation"></span><span class="eng-directions">Get Directions</span><span class="ar-directions hidden">احصل على الاتجاهات</span></a></div></div></div><div><div class="bg-white/60 rounded-3xl overflow-hidden border border-gold-pale/30"><img src="image/diwan el wadi.jpg" class="w-full aspect-[16/10] object-cover"><div class="p-8"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 bg-accent/5 rounded-xl flex items-center justify-center"><span class="iconify text-accent" data-icon="lucide:utensils"></span></div><div><p class="font-hand text-sm text-gold eng-reception-label">Reception · After Ceremony</p><p class="font-hand text-sm text-gold ar-reception-label hidden">الاستقبال · بعد المراسم</p><h3 class="font-display text-2xl">Diwan Al Wadi</h3></div></div><a href="https://maps.app.goo.gl/KpSWn4EsUs8pTaX99" target="_blank" class="inline-flex items-center gap-2 bg-accent text-paper px-5 py-2.5 rounded-xl text-sm"><span class="iconify" data-icon="lucide:navigation"></span><span class="eng-directions2">Get Directions</span><span class="ar-directions2 hidden">احصل على الاتجاهات</span></a></div></div></div></div></div></section>
+    <!-- FIND YOUR WAY SECTION (4 locations) -->
+    <section class="relative py-24 px-6 bg-paper">
+        <div class="max-w-5xl mx-auto">
+            <div class="scroll-animate text-center mb-16">
+                <p class="font-hand text-2xl text-gold mb-2 eng-find-way">Find your way</p>
+                <p class="font-hand text-2xl text-gold mb-2 ar-find-way hidden">اعرفوا الطريق</p>
+                <h2 class="font-display text-3xl md:text-5xl tracking-tight eng-venues">The Venues</h2>
+                <h2 class="font-display text-3xl md:text-5xl tracking-tight ar-venues hidden">أماكن الاحتفال</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div><div class="bg-white/60 rounded-3xl overflow-hidden border border-gold-pale/30"><img src="image/mar chalita.jpg" class="w-full aspect-[16/10] object-cover"><div class="p-8"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 bg-accent/5 rounded-xl flex items-center justify-center"><span class="iconify text-accent" data-icon="lucide:church"></span></div><div><p class="font-hand text-sm text-gold eng-ceremony-label">Ceremony · 7:00 PM</p><p class="font-hand text-sm text-gold ar-ceremony-label hidden">مراسم الزفاف · 7:00 مساءً</p><h3 class="font-display text-2xl">Mar Chalita Church</h3></div></div><a href="https://maps.app.goo.gl/u7YsfAqKx8QGYDoD9" target="_blank" class="inline-flex items-center gap-2 bg-accent text-paper px-5 py-2.5 rounded-xl text-sm"><span class="iconify" data-icon="lucide:navigation"></span><span class="eng-directions">Get Directions</span><span class="ar-directions hidden">احصل على الاتجاهات</span></a></div></div></div>
+                <div><div class="bg-white/60 rounded-3xl overflow-hidden border border-gold-pale/30"><img src="image/diwan el wadi.jpg" class="w-full aspect-[16/10] object-cover"><div class="p-8"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 bg-accent/5 rounded-xl flex items-center justify-center"><span class="iconify text-accent" data-icon="lucide:utensils"></span></div><div><p class="font-hand text-sm text-gold eng-reception-label">Reception · After Ceremony</p><p class="font-hand text-sm text-gold ar-reception-label hidden">الاستقبال · بعد المراسم</p><h3 class="font-display text-2xl">Diwan Al Wadi</h3></div></div><a href="https://maps.app.goo.gl/KpSWn4EsUs8pTaX99" target="_blank" class="inline-flex items-center gap-2 bg-accent text-paper px-5 py-2.5 rounded-xl text-sm"><span class="iconify" data-icon="lucide:navigation"></span><span class="eng-directions2">Get Directions</span><span class="ar-directions2 hidden">احصل على الاتجاهات</span></a></div></div></div>
+                <div><div class="bg-white/60 rounded-3xl overflow-hidden border border-gold-pale/30"><img src="image/DSC07994.JPG" class="w-full aspect-[16/10] object-cover"><div class="p-8"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 bg-accent/5 rounded-xl flex items-center justify-center"><span class="iconify text-accent" data-icon="lucide:home"></span></div><div><p class="font-hand text-sm text-gold eng-groom-label">Groom's Residence</p><p class="font-hand text-sm text-gold ar-groom-label hidden">منزل العريس</p><h3 class="font-display text-2xl eng-groom-title">Elie's House</h3><h3 class="font-display text-2xl ar-groom-title hidden">منزل إيلي</h3></div></div><p class="text-accent/60 text-xs mb-3 eng-groom-addr">Andaket, Akkar, Lebanon</p><p class="text-accent/60 text-xs mb-3 ar-groom-addr hidden">عندقت - عكار، لبنان</p><a href="https://maps.app.goo.gl/placeholderGroom" target="_blank" class="inline-flex items-center gap-2 bg-accent text-paper px-5 py-2.5 rounded-xl text-sm"><span class="iconify" data-icon="lucide:navigation"></span><span class="eng-directions-groom">Get Directions</span><span class="ar-directions-groom hidden">احصل على الاتجاهات</span></a></div></div></div>
+                <div><div class="bg-white/60 rounded-3xl overflow-hidden border border-gold-pale/30"><img src="image/DSC07525.jpg" class="w-full aspect-[16/10] object-cover"><div class="p-8"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 bg-accent/5 rounded-xl flex items-center justify-center"><span class="iconify text-accent" data-icon="lucide:home"></span></div><div><p class="font-hand text-sm text-gold eng-bride-label">Bride's Residence</p><p class="font-hand text-sm text-gold ar-bride-label hidden">منزل العروس</p><h3 class="font-display text-2xl eng-bride-title">Sarah's House</h3><h3 class="font-display text-2xl ar-bride-title hidden">منزل سارة</h3></div></div><p class="text-accent/60 text-xs mb-3 eng-bride-addr">Qoubaiyat, Akkar, Lebanon</p><p class="text-accent/60 text-xs mb-3 ar-bride-addr hidden">قوبيات - عكار، لبنان</p><a href="https://maps.app.goo.gl/placeholderBride" target="_blank" class="inline-flex items-center gap-2 bg-accent text-paper px-5 py-2.5 rounded-xl text-sm"><span class="iconify" data-icon="lucide:navigation"></span><span class="eng-directions-bride">Get Directions</span><span class="ar-directions-bride hidden">احصل على الاتجاهات</span></a></div></div></div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Gift Section -->
     <section class="relative py-24 px-6 bg-gradient-to-b from-paper/90 to-paper"><div class="max-w-3xl mx-auto"><div class="scroll-animate text-center mb-10"><div class="flex justify-center mb-3"><span class="iconify text-gold text-4xl animate-float" data-icon="lucide:gift"></span></div><h2 class="font-display text-3xl md:text-4xl tracking-tight eng-gift-title">Wedding list</h2><h2 class="font-display text-3xl md:text-4xl tracking-tight ar-gift-title hidden">هدية</h2></div><div class="scroll-animate gift-card bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-gold-pale/40 shadow-xl text-center"><div class="bg-paper/70 rounded-2xl p-5"><div class="flex items-center justify-center gap-2 mb-3"><span class="iconify text-gold" data-icon="lucide:gift"></span><h3 class="font-display text-xl eng-gift-account-title">Wish Account</h3><h3 class="font-display text-xl ar-gift-account-title hidden">حساب الأمنيات</h3></div><div class="space-y-3"><div class="flex justify-center p-3 bg-white/60 rounded-xl"><span class="font-display text-3xl md:text-4xl text-gold font-bold tracking-wider">71976509</span></div></div></div></div></div></section>
 
-    <!-- RSVP SECTION with LOCKED name and guests field (lock number of persons) -->
+    <!-- RSVP SECTION with UNLOCKED guest count BUT max limit (can only decrease) -->
     <section id="rsvp" class="relative py-24 px-6 bg-paper/95">
         <div class="relative max-w-xl mx-auto">
             <div class="scroll-animate text-center mb-12">
@@ -179,7 +262,7 @@
             
             <form id="rsvp-form" class="scroll-animate bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-10 border border-gold-pale/30 shadow-lg">
                 <div class="space-y-5">
-                    <!-- FULL NAME (locked & pre-filled from URL) -->
+                    <!-- FULL NAME (locked) -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-name-label">Full Name <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-2 ar-name-label hidden">الاسم الكامل <span class="text-gold">*</span></label>
@@ -187,7 +270,7 @@
                         <div class="readonly-hint"><span class="iconify" data-icon="lucide:lock"></span><span class="eng-name-locked">Name locked as per invitation</span><span class="ar-name-locked hidden">الاسم مقفل حسب الدعوة</span></div>
                     </div>
                     
-                    <!-- Attendance radio buttons -->
+                    <!-- Attendance radios -->
                     <div>
                         <label class="block text-sm font-medium mb-3 eng-attend-label">Will you attend? <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-3 ar-attend-label hidden">هل ستحضر؟ <span class="text-gold">*</span></label>
@@ -197,15 +280,23 @@
                         </div>
                     </div>
                     
-                    <!-- GUESTS SECTION - LOCKED & READONLY plus no +/- buttons, fixed from URL -->
+                    <!-- GUESTS SECTION: editable but capped at max seats (can only reduce) -->
                     <div id="guests-section" style="display: none;">
                         <label class="block text-sm font-medium mb-2 eng-guests-label">Number of Guests (including yourself)</label>
                         <label class="block text-sm font-medium mb-2 ar-guests-label hidden">عدد الضيوف (بما في ذلك نفسك)</label>
-                        <input type="number" id="rsvp-guests" value="1" min="1" max="10" class="rsvp-input w-full px-4 py-3 bg-white/70 border border-gold-pale/40 rounded-xl locked-field" readonly>
-                        <div class="readonly-hint"><span class="iconify" data-icon="lucide:lock"></span><span class="eng-guests-locked">Guest count is pre-set for your party</span><span class="ar-guests-locked hidden">عدد الضيوف محدد مسبقاً لدعوتكم</span></div>
+                        <div class="flex items-center justify-between bg-white/70 border border-gold-pale/40 rounded-xl p-1 pr-2">
+                            <div class="guest-control-wrapper">
+                                <button type="button" id="guest-decrease" class="guest-btn" aria-label="Decrease guests">−</button>
+                                <input type="number" id="rsvp-guests" value="1" min="1" max="10" class="guest-number-input" step="1">
+                                <button type="button" id="guest-increase" class="guest-btn" aria-label="Increase guests">+</button>
+                            </div>
+                            <span class="text-xs text-gold/70 italic eng-guests-locked-hint">(max allowed: <span id="max-guest-indicator">1</span>)</span>
+                            <span class="text-xs text-gold/70 italic ar-guests-locked-hint hidden">(الحد الأقصى: <span id="max-guest-indicator-ar">1</span>)</span>
+                        </div>
+                        <div class="readonly-hint"><span class="iconify" data-icon="lucide:info"></span><span class="eng-guests-editable">You can reduce the number, but cannot exceed the original invitation limit.</span><span class="ar-guests-editable hidden">يمكنك تقليل العدد، لكن لا يمكنك تجاوز الحد الأقصى للدعوة.</span></div>
                     </div>
                     
-                    <!-- Message field (editable) -->
+                    <!-- Message field -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-message-label">Message for the Couple (optional)</label>
                         <label class="block text-sm font-medium mb-2 ar-message-label hidden">رسالة للعروسين (اختياري)</label>
@@ -227,7 +318,7 @@
 
     <script>
         (function() {
-            // --- Music & Welcome ---
+            // --- Music & Welcome (unchanged) ---
             const audio = document.getElementById('bg-music');
             const musicBtn = document.getElementById('music-toggle');
             const musicIcon = document.getElementById('music-icon');
@@ -242,7 +333,7 @@
             const enterBtn = document.getElementById('enterButton');
             if(enterBtn) enterBtn.addEventListener('click', (e) => { e.stopPropagation(); dismissOverlay(); });
             
-            // --- URL PARAM HANDLING: LOCK name and seats (guests) ---
+            // --- URL params & lock name / max seats ---
             function getUrlParams() {
                 const params = new URLSearchParams(window.location.search);
                 return {
@@ -250,61 +341,82 @@
                     seats: params.get('seats') ? parseInt(params.get('seats'), 10) : null
                 };
             }
-            
             const urlData = getUrlParams();
             const nameInput = document.getElementById('rsvp-name');
             const guestsInput = document.getElementById('rsvp-guests');
             const guestsSection = document.getElementById('guests-section');
+            let maxGuestsAllowed = 1;
             
-            // Lock name field with prefilled value
             if(nameInput) {
-                if(urlData.name && urlData.name !== "") {
-                    nameInput.value = urlData.name;
-                } else {
-                    // fallback if no name provided: still locked but show placeholder note
-                    nameInput.value = "Guest (name not provided)";
-                }
+                if(urlData.name && urlData.name !== "") nameInput.value = urlData.name;
+                else nameInput.value = "Guest (name not provided)";
                 nameInput.readOnly = true;
                 nameInput.classList.add('locked-field');
             }
             
-            // Lock number of guests: prefill from 'seats' param, disable editing, remove +/- buttons UI
-            if(guestsInput && urlData.seats && !isNaN(urlData.seats) && urlData.seats >= 1 && urlData.seats <= 10) {
-                guestsInput.value = urlData.seats;
-                guestsInput.readOnly = true;
-                guestsInput.classList.add('locked-field');
-                if(guestsSection) guestsSection.style.display = 'block';
-            } 
-            else if(guestsInput && urlData.seats) {
-                // fallback if invalid seats
-                guestsInput.value = 1;
-                guestsInput.readOnly = true;
-                guestsInput.classList.add('locked-field');
-                if(guestsSection) guestsSection.style.display = 'block';
-            }
-            else if(guestsInput) {
-                // if no seats param but name is provided, we still lock guests to 1 (default) but we can optionally hide? but we'll lock default 1.
-                guestsInput.value = 1;
-                guestsInput.readOnly = true;
-                guestsInput.classList.add('locked-field');
-                // show section only if name param exists or we want to show consistent locked.
-                if(urlData.name) if(guestsSection) guestsSection.style.display = 'block';
+            // Determine max guest limit from URL 'seats' param
+            if(urlData.seats && !isNaN(urlData.seats) && urlData.seats >= 1 && urlData.seats <= 20) {
+                maxGuestsAllowed = urlData.seats;
+            } else {
+                maxGuestsAllowed = 1;
             }
             
-            // Ensure attendance radio toggles the guests section display but guests remain readonly.
+            if(guestsInput) {
+                guestsInput.value = maxGuestsAllowed;
+                guestsInput.max = maxGuestsAllowed;
+                guestsInput.min = 1;
+                const maxIndicator = document.getElementById('max-guest-indicator');
+                if(maxIndicator) maxIndicator.innerText = maxGuestsAllowed;
+                const maxIndicatorAr = document.getElementById('max-guest-indicator-ar');
+                if(maxIndicatorAr) maxIndicatorAr.innerText = maxGuestsAllowed;
+                
+                // Enforce max on manual input
+                guestsInput.addEventListener('input', function() {
+                    let val = parseInt(this.value, 10);
+                    if(isNaN(val)) val = 1;
+                    if(val > maxGuestsAllowed) this.value = maxGuestsAllowed;
+                    if(val < 1) this.value = 1;
+                });
+                guestsInput.addEventListener('change', function() {
+                    let val = parseInt(this.value, 10);
+                    if(isNaN(val)) this.value = 1;
+                    if(val > maxGuestsAllowed) this.value = maxGuestsAllowed;
+                    if(val < 1) this.value = 1;
+                });
+            }
+            
+            const decreaseBtn = document.getElementById('guest-decrease');
+            const increaseBtn = document.getElementById('guest-increase');
+            if(decreaseBtn && guestsInput) {
+                decreaseBtn.addEventListener('click', () => {
+                    let current = parseInt(guestsInput.value, 10);
+                    if(!isNaN(current) && current > 1) {
+                        guestsInput.value = current - 1;
+                        guestsInput.dispatchEvent(new Event('change'));
+                    }
+                });
+                increaseBtn.addEventListener('click', () => {
+                    let current = parseInt(guestsInput.value, 10);
+                    if(!isNaN(current) && current < maxGuestsAllowed) {
+                        guestsInput.value = current + 1;
+                        guestsInput.dispatchEvent(new Event('change'));
+                    }
+                });
+            }
+            
+            // Show guests section only if name param exists or seats defined
+            if(urlData.name || urlData.seats) if(guestsSection) guestsSection.style.display = 'block';
+            
             const attendanceRadios = document.querySelectorAll('input[name="attendance"]');
             function updateGuestSectionVisibility() {
                 if(!guestsSection) return;
                 const selected = document.querySelector('input[name="attendance"]:checked');
-                if(selected && selected.value.includes('Yes')) {
-                    guestsSection.style.display = 'block';
-                } else {
-                    guestsSection.style.display = 'none';
-                }
+                if(selected && selected.value.includes('Yes')) guestsSection.style.display = 'block';
+                else guestsSection.style.display = 'none';
             }
             attendanceRadios.forEach(radio => radio.addEventListener('change', updateGuestSectionVisibility));
             
-            // Countdown timer
+            // Countdown
             function updateCountdown() { 
                 const wedding = new Date('2026-08-08T18:00:00'); 
                 const now = new Date(); 
@@ -325,7 +437,7 @@
             // Toast
             function showToast(message, isError) { const toast = document.getElementById('toast'); const toastMsg = document.getElementById('toast-message'); if(toast && toastMsg) { toastMsg.textContent = message; toast.classList.remove('bg-red-800','bg-accent'); toast.classList.add(isError ? 'bg-red-800' : 'bg-accent'); toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 4000); } }
             
-            // WhatsApp handler with LOCKED data (uses readonly values)
+            // WhatsApp handler with editable guest count
             const form = document.getElementById('rsvp-form');
             const WHATSAPP_NUMBER = "9613985722";
             if(form) {
@@ -335,19 +447,14 @@
                     const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
                     const guestsField = document.getElementById('rsvp-guests');
                     const messageField = document.getElementById('rsvp-message');
-                    
                     const nameValue = fullName ? fullName.value.trim() : '';
                     let guests = guestsField ? guestsField.value : '1';
                     const messageText = messageField ? messageField.value.trim() : '';
-                    
                     if(!nameValue) { showToast('Please enter your full name', true); return; }
                     if(!attendanceRadio) { showToast('Please select whether you will attend', true); return; }
-                    
                     const attendanceResponse = attendanceRadio.value;
                     let guestInfo = '';
-                    if(attendanceResponse.includes('Yes')) {
-                        guestInfo = '\n👥 *Number of Guests:* ' + guests + ' person(s) (including yourself)';
-                    }
+                    if(attendanceResponse.includes('Yes')) guestInfo = '\n👥 *Number of Guests:* ' + guests + ' person(s) (including yourself)';
                     const optionalMsg = messageText ? '\n💬 *Message:* ' + messageText : '';
                     const whatsappMessage = '✨ *WEDDING RSVP - Elie & Sarah* ✨\n\n👤 *Guest:* ' + nameValue + '\n💌 *Response:* ' + attendanceResponse + guestInfo + optionalMsg + '\n\n📅 *Wedding Date:* August 8, 2026\n📍 *Church:* Mar Chalita, Andaket at 7:00 PM\n🎉 *Reception:* Diwan Al Wadi';
                     const encoded = encodeURIComponent(whatsappMessage);
@@ -356,13 +463,13 @@
                 });
             }
             
-            // Language toggle (preserve locked hints)
+            // Language toggle
             let isArabic = false;
             const toggleBtn = document.getElementById('languageToggle');
             function setLanguage(arabic) { 
                 isArabic = arabic; document.body.dir = arabic ? 'rtl' : 'ltr'; if(arabic) document.body.classList.add('font-arabic'); else document.body.classList.remove('font-arabic');
-                const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-1,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-find-way,.eng-venues,.eng-ceremony-label,.eng-reception-label,.eng-directions,.eng-directions2,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text,.eng-name-locked,.eng-guests-locked';
-                const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-1,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-find-way,.ar-venues,.ar-ceremony-label,.ar-reception-label,.ar-directions,.ar-directions2,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text,.ar-name-locked,.ar-guests-locked';
+                const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-find-way,.eng-venues,.eng-ceremony-label,.eng-reception-label,.eng-directions,.eng-directions2,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text,.eng-name-locked,.eng-guests-editable,.eng-guests-locked-hint,.eng-groom-label,.eng-groom-title,.eng-groom-addr,.eng-directions-groom,.eng-bride-label,.eng-bride-title,.eng-bride-addr,.eng-directions-bride';
+                const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-1,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-find-way,.ar-venues,.ar-ceremony-label,.ar-reception-label,.ar-directions,.ar-directions2,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text,.ar-name-locked,.ar-guests-editable,.ar-guests-locked-hint,.ar-groom-label,.ar-groom-title,.ar-groom-addr,.ar-directions-groom,.ar-bride-label,.ar-bride-title,.ar-bride-addr,.ar-directions-bride';
                 document.querySelectorAll(engSelectors).forEach(el => el.classList.toggle('hidden', arabic));
                 document.querySelectorAll(arSelectors).forEach(el => el.classList.toggle('hidden', !arabic));
                 if(toggleBtn) { const txt = toggleBtn.querySelector('.toggle-text'); const icon = toggleBtn.querySelector('.toggle-icon'); if(txt) txt.textContent = arabic ? 'English' : 'عربي'; if(icon) icon.textContent = arabic ? '🇬🇧' : '🇦🇪'; }
