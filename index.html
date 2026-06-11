@@ -317,40 +317,6 @@
             touch-action: manipulation;
         }
         
-        /* REMOVED BLUR EFFECTS: Clear background images */
-        .hero-bg-image {
-            position: fixed;
-            inset: 0;
-            z-index: -10;
-        }
-        .hero-bg-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, rgba(244,239,234,0.65) 0%, rgba(244,239,234,0.55) 100%);
-        }
-        /* Ensure all venue and story images are sharp with no blurring */
-        .photo-book-card img, .venue-img {
-            transition: transform 0.5s ease;
-            image-rendering: crisp-edges;
-        }
-        /* Remove any backdrop blur for better image clarity */
-        .bg-white\/60, .bg-white\/50, .bg-white\/70, .bg-white\/80, .bg-white\/90 {
-            backdrop-filter: none !important;
-            background-color: rgba(255, 255, 255, 0.85) !important;
-        }
-        .backdrop-blur-sm, .backdrop-blur-md {
-            backdrop-filter: none !important;
-        }
-        /* Ensure cards have solid but subtle backgrounds */
-        .rsvp-card, .countdown-card {
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-        
         /* Style for readonly input to indicate it's locked but still visible */
         input.rsvp-name-locked {
             background-color: #f5f3ef;
@@ -409,11 +375,13 @@
         </div>
     </div>
 
-    <!-- HERO SECTION - CRYSTAL CLEAR BACKGROUND (NO BLUR) -->
+    <!-- HERO SECTION -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div class="hero-bg-image">
-            <img src="image/DSC07789.jpg" alt="Wedding background" class="w-full h-full object-cover">
-            <div class="hero-overlay"></div>
+        <div class="fixed inset-0 -z-10">
+            <img src="image/DSC07789.jpg" 
+                 alt="Wedding background" 
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-b from-paper/70 via-paper/50 to-paper"></div>
         </div>
         <div class="relative z-10 text-center px-6 max-w-3xl mx-auto">
             <div class="animate-fade-up opacity-0 delay-100 mb-6">
@@ -448,7 +416,7 @@
         </div>
     </section>
 
-    <!-- OUR STORY SECTION (removed blur from cards) -->
+    <!-- OUR STORY SECTION -->
     <section class="relative py-24 px-6 bg-paper">
         <div class="max-w-6xl mx-auto">
             <div class="scroll-animate text-center mb-12">
@@ -458,25 +426,25 @@
                 <h2 class="font-display text-3xl md:text-5xl tracking-tight ar-story-title hidden">قصتنا</h2>
                 <div class="w-24 h-px bg-gold-pale/60 mx-auto mt-4"></div>
             </div>
-            <div class="scroll-animate book-wrapper relative bg-white/95">
+            <div class="scroll-animate book-wrapper relative bg-white/90">
                 <div class="book-spine"></div>
                 <div class="relative z-10">
                     <div class="grid md:grid-cols-3 gap-6 md:gap-8 mb-12">
-                        <div class="photo-book-card rounded-2xl overflow-hidden shadow-md border border-gold-pale/40 bg-white p-2">
+                        <div class="photo-book-card rounded-2xl overflow-hidden shadow-md border border-gold-pale/30 bg-white p-2">
                             <img src="image/DSC07525.jpg" alt="Elie and Sarah first meeting" class="w-full aspect-[4/3] object-cover rounded-xl transition-transform duration-500 hover:scale-105">
                             <div class="p-3 text-center">
                                 <span class="font-hand text-gold text-sm eng-photo1-caption">First Encounter</span>
                                 <span class="font-hand text-gold text-sm ar-photo1-caption hidden">اللقاء الأول</span>
                             </div>
                         </div>
-                        <div class="photo-book-card rounded-2xl overflow-hidden shadow-md border border-gold-pale/40 bg-white p-2">
+                        <div class="photo-book-card rounded-2xl overflow-hidden shadow-md border border-gold-pale/30 bg-white p-2">
                             <img src="image/DSC07944.jpg" alt="Elie proposing to Sarah" class="w-full aspect-[4/3] object-cover rounded-xl transition-transform duration-500 hover:scale-105">
                             <div class="p-3 text-center">
                                 <span class="font-hand text-gold text-sm eng-photo2-caption">The Proposal</span>
                                 <span class="font-hand text-gold text-sm ar-photo2-caption hidden">طلب الزواج</span>
                             </div>
                         </div>
-                        <div class="photo-book-card rounded-2xl overflow-hidden shadow-md border border-gold-pale/40 bg-white p-2">
+                        <div class="photo-book-card rounded-2xl overflow-hidden shadow-md border border-gold-pale/30 bg-white p-2">
                             <img src="image/DSC08089.jpg" alt="Celebrating love" class="w-full aspect-[4/3] object-cover rounded-xl transition-transform duration-500 hover:scale-105">
                             <div class="p-3 text-center">
                                 <span class="font-hand text-gold text-sm eng-photo3-caption">Joyful Moments</span>
@@ -485,7 +453,7 @@
                         </div>
                     </div>
                     <div class="relative px-4 md:px-8">
-                        <div class="story-text text-accent/85 text-base md:text-lg leading-relaxed drop-cap eng-story-text">
+                        <div class="story-text text-accent/80 text-base md:text-lg leading-relaxed drop-cap eng-story-text">
                             Our love story began in the charming hills of Akkar, where two paths unexpectedly crossed under the golden Mediterranean sun. 
                             Elie, with his gentle heart and adventurous spirit, met Sarah, whose laughter echoed like music through the valleys. 
                             From long walks among olive groves to heartfelt conversations under starlit skies, every moment wove a tapestry of shared dreams. 
@@ -493,7 +461,7 @@
                             Now, surrounded by the ones we cherish, we invite you to witness the next chapter — a lifetime of togetherness. 
                             This is not just a wedding; it's the beginning of our forever.
                         </div>
-                        <div class="story-text text-accent/85 text-base md:text-lg leading-relaxed drop-cap ar-story-text hidden">
+                        <div class="story-text text-accent/80 text-base md:text-lg leading-relaxed drop-cap ar-story-text hidden">
                             بدأت قصتنا في تلال عكار الساحرة، حيث التقى طريقان بغير توقع تحت أشعة الشمس الذهبية للبحر الأبيض المتوسط. إيلي، بقلبه اللطيف وروحه المغامرة، التقى سارة التي كان ضحكها يتردد كالموسيقى عبر الوديان. من نزهات طويلة بين بساتين الزيتون إلى أحاديث صادقة تحت سماء مليئة بالنجوم، كل لحظة نسجت نسيجاً من الأحلام المشتركة. خلال فصول الفرح والتفاهم الهادئ، أدركنا أن أرواحنا وجدت موطنها. والآن، محاطين بأحبائنا، ندعوكم لتشهدوا الفصل التالي — حياة مليئة بالمعية. هذا ليس مجرد زفاف؛ إنها بداية أبديتنا.
                         </div>
                         <div class="flex justify-center mt-8 gap-2 text-gold/50">
@@ -507,7 +475,7 @@
         </div>
     </section>
 
-    <!-- COUNTDOWN SECTION (solid background cards, no blur) -->
+    <!-- COUNTDOWN SECTION -->
     <section id="countdown" class="relative py-24 px-6 bg-paper/80">
         <div class="max-w-4xl mx-auto text-center">
             <div class="scroll-animate">
@@ -517,22 +485,22 @@
                 <h2 class="font-display text-3xl md:text-5xl tracking-tight mb-12 ar-big-day hidden">اليوم الكبير</h2>
             </div>
             <div class="scroll-animate grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                <div class="bg-white rounded-2xl p-6 border border-gold-pale/40 shadow-sm">
+                <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30">
                     <span id="cd-days" class="font-display text-5xl md:text-6xl text-accent block">000</span>
                     <span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-days">Days</span>
                     <span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-days hidden">يوم</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 border border-gold-pale/40 shadow-sm">
+                <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30">
                     <span id="cd-hours" class="font-display text-5xl md:text-6xl text-accent block">00</span>
                     <span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-hours">Hours</span>
                     <span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-hours hidden">ساعة</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 border border-gold-pale/40 shadow-sm">
+                <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30">
                     <span id="cd-minutes" class="font-display text-5xl md:text-6xl text-accent block">00</span>
                     <span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-minutes">Minutes</span>
                     <span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-minutes hidden">دقيقة</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 border border-gold-pale/40 shadow-sm">
+                <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30">
                     <span id="cd-seconds" class="font-display text-5xl md:text-6xl text-accent block">00</span>
                     <span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-seconds">Seconds</span>
                     <span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-seconds hidden">ثانية</span>
@@ -541,7 +509,7 @@
         </div>
     </section>
 
-    <!-- EVENT DETAILS (removed blur) -->
+    <!-- EVENT DETAILS, VENUE, GIFTS sections -->
     <section class="relative py-24 px-6 bg-paper/95">
         <div class="max-w-5xl mx-auto">
             <div class="scroll-animate text-center mb-16">
@@ -552,7 +520,7 @@
             </div>
             <div class="grid md:grid-cols-2 gap-8 justify-center">
                 <div class="scroll-animate group">
-                    <div class="bg-white rounded-3xl p-8 border border-gold-pale/40 text-center h-full shadow-sm">
+                    <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gold-pale/30 text-center h-full">
                         <div class="w-16 h-16 bg-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6">
                             <span class="iconify text-accent" data-icon="lucide:church" data-width="28"></span>
                         </div>
@@ -567,7 +535,7 @@
                     </div>
                 </div>
                 <div class="scroll-animate group">
-                    <div class="bg-white rounded-3xl p-8 border border-gold-pale/40 text-center h-full shadow-sm">
+                    <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gold-pale/30 text-center h-full">
                         <div class="w-16 h-16 bg-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6">
                             <span class="iconify text-accent" data-icon="lucide:party-popper" data-width="28"></span>
                         </div>
@@ -585,7 +553,6 @@
         </div>
     </section>
 
-    <!-- VENUE MAPS (crisp images) -->
     <section class="relative py-24 px-6 bg-paper">
         <div class="relative max-w-5xl mx-auto">
             <div class="scroll-animate text-center mb-16">
@@ -596,7 +563,7 @@
             </div>
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="scroll-animate">
-                    <div class="bg-white rounded-3xl overflow-hidden border border-gold-pale/40 shadow-sm">
+                    <div class="bg-white/60 backdrop-blur-sm rounded-3xl overflow-hidden border border-gold-pale/30">
                         <img src="image/mar chalita.jpg" alt="Mar Chalita Church" class="w-full aspect-[16/10] object-cover">
                         <div class="p-8">
                             <div class="flex items-center gap-3 mb-4">
@@ -618,7 +585,7 @@
                     </div>
                 </div>
                 <div class="scroll-animate">
-                    <div class="bg-white rounded-3xl overflow-hidden border border-gold-pale/40 shadow-sm">
+                    <div class="bg-white/60 backdrop-blur-sm rounded-3xl overflow-hidden border border-gold-pale/30">
                         <img src="image/diwan el wadi.jpg" alt="Diwan Al Wadi" class="w-full aspect-[16/10] object-cover">
                         <div class="p-8">
                             <div class="flex items-center gap-3 mb-4">
@@ -643,7 +610,6 @@
         </div>
     </section>
 
-    <!-- WEDDING GIFT (removed blur) -->
     <section class="relative py-24 px-6 bg-gradient-to-b from-paper/90 to-paper">
         <div class="relative max-w-3xl mx-auto">
             <div class="scroll-animate text-center mb-10">
@@ -653,15 +619,15 @@
                 <h2 class="font-display text-3xl md:text-4xl tracking-tight eng-gift-title">Wedding list</h2>
                 <h2 class="font-display text-3xl md:text-4xl tracking-tight ar-gift-title hidden">هدية</h2>
             </div>
-            <div class="scroll-animate gift-card bg-white rounded-3xl p-6 md:p-8 border border-gold-pale/40 shadow-lg text-center">
-                <div class="bg-paper/80 rounded-2xl p-5 border border-gold-pale/40">
+            <div class="scroll-animate gift-card bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-gold-pale/40 shadow-xl text-center">
+                <div class="bg-paper/70 rounded-2xl p-5 border border-gold-pale/40">
                     <div class="flex items-center justify-center gap-2 mb-3">
                         <span class="iconify text-gold" data-icon="lucide:gift" data-width="24"></span>
                         <h3 class="font-display text-xl text-accent eng-gift-account-title">Wish Account</h3>
                         <h3 class="font-display text-xl text-accent ar-gift-account-title hidden">حساب الأمنيات</h3>
                     </div>
                     <div class="space-y-3">
-                        <div class="flex justify-center items-center p-3 bg-white rounded-xl border border-gold-pale/30">
+                        <div class="flex justify-center items-center p-3 bg-white/60 rounded-xl">
                             <span class="font-display text-3xl md:text-4xl text-gold font-bold tracking-wider">71976509</span>
                         </div>
                     </div>
@@ -681,22 +647,23 @@
                 <p class="text-accent/60 mt-4 text-sm ar-rsvp-deadline hidden">يرجى الرد بحلول 1 أغسطس 2026</p>
             </div>
             
-            <form id="rsvp-form" class="scroll-animate bg-white rounded-3xl p-6 md:p-10 border border-gold-pale/40 shadow-lg">
+            <form id="rsvp-form" class="scroll-animate bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-10 border border-gold-pale/30 shadow-lg">
                 <div class="space-y-5">
+                    <!-- Name field - NOW READONLY: guest cannot edit, but can see the name from URL -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-name-label">Full Name <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-2 ar-name-label hidden">الاسم الكامل <span class="text-gold">*</span></label>
-                        <!-- NAME INPUT IS NOW READONLY TO PREVENT EDITS -->
-                        <input type="text" id="rsvp-name" required placeholder="Your full name" class="rsvp-input rsvp-name-locked w-full px-4 py-3 bg-white border border-gold-pale/50 rounded-xl focus:ring-2 focus:ring-gold/30" readonly>
+                        <input type="text" id="rsvp-name" required placeholder="Your full name" class="rsvp-name-locked w-full px-4 py-3 bg-gray-100/80 border border-gold-pale/40 rounded-xl cursor-default" readonly>
                     </div>
                     
+                    <!-- Attendance radio buttons -->
                     <div>
                         <label class="block text-sm font-medium mb-3 eng-attend-label">Will you attend? <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-3 ar-attend-label hidden">هل ستحضر؟ <span class="text-gold">*</span></label>
                         <div class="grid grid-cols-2 gap-3">
                             <label class="attendance-option cursor-pointer block">
                                 <input type="radio" name="attendance" value="Yes, I will be there! 🎉" class="hidden peer" required>
-                                <div class="peer-checked:bg-accent peer-checked:text-paper bg-white border border-gold-pale/40 rounded-xl py-3 text-center text-sm font-medium transition-all duration-200">
+                                <div class="peer-checked:bg-accent peer-checked:text-paper bg-white/70 border border-gold-pale/40 rounded-xl py-3 text-center text-sm font-medium transition-all duration-200">
                                     <span class="iconify inline-block mr-1" data-icon="lucide:heart" data-width="14"></span>
                                     <span class="eng-accept">Joyfully Accept</span>
                                     <span class="ar-accept hidden">أقبل بفرح</span>
@@ -704,7 +671,7 @@
                             </label>
                             <label class="attendance-option cursor-pointer block">
                                 <input type="radio" name="attendance" value="No, regretfully I cannot make it. 😔" class="hidden peer">
-                                <div class="peer-checked:bg-accent peer-checked:text-paper bg-white border border-gold-pale/40 rounded-xl py-3 text-center text-sm font-medium transition-all duration-200">
+                                <div class="peer-checked:bg-accent peer-checked:text-paper bg-white/70 border border-gold-pale/40 rounded-xl py-3 text-center text-sm font-medium transition-all duration-200">
                                     <span class="iconify inline-block mr-1" data-icon="lucide:heart-crack" data-width="14"></span>
                                     <span class="eng-decline">Regretfully Decline</span>
                                     <span class="ar-decline hidden">أعتذر عن الحضور</span>
@@ -713,20 +680,22 @@
                         </div>
                     </div>
                     
+                    <!-- Guests section -->
                     <div id="guests-section" style="display: none;">
                         <label class="block text-sm font-medium mb-2 eng-guests-label">Number of Guests (including yourself)</label>
                         <label class="block text-sm font-medium mb-2 ar-guests-label hidden">عدد الضيوف (بما في ذلك نفسك)</label>
                         <div class="flex items-center gap-3">
-                            <button type="button" id="decrement-guests" class="w-10 h-10 rounded-full bg-white border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center touch-manipulation"><span class="iconify" data-icon="lucide:minus" data-width="16"></span></button>
-                            <input type="number" id="rsvp-guests" value="1" min="1" max="10" class="rsvp-input w-24 text-center px-2 py-3 bg-white border border-gold-pale/40 rounded-xl">
-                            <button type="button" id="increment-guests" class="w-10 h-10 rounded-full bg-white border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center touch-manipulation"><span class="iconify" data-icon="lucide:plus" data-width="16"></span></button>
+                            <button type="button" id="decrement-guests" class="w-10 h-10 rounded-full bg-white/80 border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center touch-manipulation"><span class="iconify" data-icon="lucide:minus" data-width="16"></span></button>
+                            <input type="number" id="rsvp-guests" value="1" min="1" max="10" class="rsvp-input w-24 text-center px-2 py-3 bg-white/70 border border-gold-pale/40 rounded-xl">
+                            <button type="button" id="increment-guests" class="w-10 h-10 rounded-full bg-white/80 border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center touch-manipulation"><span class="iconify" data-icon="lucide:plus" data-width="16"></span></button>
                         </div>
                     </div>
                     
+                    <!-- Message field -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-message-label">Message for the Couple (optional)</label>
                         <label class="block text-sm font-medium mb-2 ar-message-label hidden">رسالة للعروسين (اختياري)</label>
-                        <textarea id="rsvp-message" rows="3" placeholder="Share your wishes..." class="rsvp-input w-full px-4 py-3 bg-white border border-gold-pale/40 rounded-xl resize-none"></textarea>
+                        <textarea id="rsvp-message" rows="3" placeholder="Share your wishes..." class="rsvp-input w-full px-4 py-3 bg-white/70 border border-gold-pale/40 rounded-xl resize-none"></textarea>
                     </div>
                 </div>
                 
@@ -739,7 +708,7 @@
         </div>
     </section>
 
-    <!-- FOOTER (clean solid) -->
+    <!-- FOOTER -->
     <footer class="relative py-16 px-6 text-center">
         <div class="absolute inset-0 bg-accent"></div>
         <div class="relative z-10">
@@ -764,7 +733,9 @@
             const welcomeOverlay = document.getElementById('welcomeOverlay');
             let isMusicPlaying = false;
             
-            if (audio) audio.volume = 0.25;
+            if (audio) {
+                audio.volume = 0.25;
+            }
             
             function startMusic() { 
                 if (!isMusicPlaying && audio) { 
@@ -772,9 +743,12 @@
                         isMusicPlaying = true; 
                         if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2'); 
                         if (musicBtn) musicBtn.classList.remove('music-pulse'); 
-                    }).catch(() => {}); 
+                    }).catch(function(e) { 
+                        console.log('Audio play failed:', e); 
+                    }); 
                 } 
             }
+            
             function stopMusic() { 
                 if (isMusicPlaying && audio) { 
                     audio.pause(); 
@@ -783,28 +757,59 @@
                     if (musicBtn) musicBtn.classList.add('music-pulse'); 
                 } 
             }
-            if (musicBtn) musicBtn.addEventListener('click', (e) => { e.stopPropagation(); isMusicPlaying ? stopMusic() : startMusic(); });
             
-            function dismissOverlay() { startMusic(); if(welcomeOverlay) { welcomeOverlay.style.opacity = '0'; setTimeout(() => { if(welcomeOverlay) welcomeOverlay.style.display = 'none'; }, 500); } }
-            if (welcomeOverlay) welcomeOverlay.addEventListener('click', dismissOverlay);
-            const enterBtn = document.getElementById('enterButton');
-            if (enterBtn) enterBtn.addEventListener('click', (e) => { e.stopPropagation(); dismissOverlay(); });
+            if (musicBtn) {
+                musicBtn.addEventListener('click', function(e) { 
+                    e.stopPropagation(); 
+                    isMusicPlaying ? stopMusic() : startMusic(); 
+                });
+            }
             
-            // URL params - now only fills the locked name field (no editing allowed)
-            function fillFromURL() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const guestName = urlParams.get('name');
-                const partySize = urlParams.get('seats');
-                const nameInput = document.getElementById('rsvp-name');
-                // Set name if provided - field is readonly so guest cannot change
-                if (guestName && nameInput) {
-                    nameInput.value = decodeURIComponent(guestName).trim();
+            function dismissOverlay() { 
+                startMusic(); 
+                if (welcomeOverlay) {
+                    welcomeOverlay.style.opacity = '0'; 
+                    setTimeout(function() { 
+                        if (welcomeOverlay) welcomeOverlay.style.display = 'none'; 
+                    }, 500);
                 }
-                if (partySize) {
-                    const guestsField = document.getElementById('rsvp-guests');
-                    const guestsSection = document.getElementById('guests-section');
-                    if (guestsField) guestsField.value = partySize;
-                    if (guestsSection) guestsSection.style.display = 'block';
+            }
+            
+            if (welcomeOverlay) {
+                welcomeOverlay.addEventListener('click', dismissOverlay);
+            }
+            const enterBtn = document.getElementById('enterButton');
+            if (enterBtn) {
+                enterBtn.addEventListener('click', function(e) { 
+                    e.stopPropagation(); 
+                    dismissOverlay(); 
+                });
+            }
+            
+            // Auto-fill from URL parameters (name and seats) - name field is now readonly
+            function fillFromURL() {
+                try {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const guestName = urlParams.get('name');
+                    const partySize = urlParams.get('seats');
+                    
+                    const nameInput = document.getElementById('rsvp-name');
+                    if (guestName && nameInput) {
+                        nameInput.value = decodeURIComponent(guestName).trim();
+                    }
+                    
+                    if (partySize) {
+                        const guestsField = document.getElementById('rsvp-guests');
+                        const guestsSection = document.getElementById('guests-section');
+                        if (guestsField) {
+                            guestsField.value = partySize;
+                        }
+                        if (guestsSection) {
+                            guestsSection.style.display = 'block';
+                        }
+                    }
+                } catch(e) {
+                    console.log('URL param parsing error:', e);
                 }
             }
             
@@ -837,27 +842,62 @@
                 if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0'); 
                 if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0'); 
             }
-            updateCountdown(); setInterval(updateCountdown, 1000);
             
-            // Scroll animations
-            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
-            document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
+            updateCountdown(); 
+            setInterval(updateCountdown, 1000);
+            
+            // Scroll animation
+            const observer = new IntersectionObserver(function(entries) { 
+                entries.forEach(function(entry) { 
+                    if (entry.isIntersecting) entry.target.classList.add('visible'); 
+                }); 
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.scroll-animate').forEach(function(el) { 
+                observer.observe(el); 
+            });
             
             // Guests counter
             const guestsInput = document.getElementById('rsvp-guests');
             const decrementBtn = document.getElementById('decrement-guests');
             const incrementBtn = document.getElementById('increment-guests');
-            if (decrementBtn) decrementBtn.addEventListener('click', () => { let val = parseInt(guestsInput?.value || 1); if (val > 1 && guestsInput) guestsInput.value = val - 1; });
-            if (incrementBtn) incrementBtn.addEventListener('click', () => { let val = parseInt(guestsInput?.value || 1); if (val < 10 && guestsInput) guestsInput.value = val + 1; });
-            if (guestsInput) guestsInput.addEventListener('change', () => { let val = parseInt(guestsInput.value); if (isNaN(val) || val < 1) guestsInput.value = 1; if (val > 10) guestsInput.value = 10; });
+            
+            if (decrementBtn) {
+                decrementBtn.addEventListener('click', function() { 
+                    let val = parseInt(guestsInput ? guestsInput.value : 1); 
+                    if (val > 1 && guestsInput) guestsInput.value = val - 1; 
+                });
+            }
+            if (incrementBtn) {
+                incrementBtn.addEventListener('click', function() { 
+                    let val = parseInt(guestsInput ? guestsInput.value : 1); 
+                    if (val < 10 && guestsInput) guestsInput.value = val + 1; 
+                });
+            }
+            if (guestsInput) {
+                guestsInput.addEventListener('change', function() { 
+                    let val = parseInt(guestsInput.value); 
+                    if (isNaN(val) || val < 1) guestsInput.value = 1; 
+                    if (val > 10) guestsInput.value = 10; 
+                });
+            }
             
             // Show guests section based on attendance
             const attendanceRadios = document.querySelectorAll('input[name="attendance"]');
-            attendanceRadios.forEach(radio => radio.addEventListener('change', function() { 
-                const guestsSection = document.getElementById('guests-section');
-                if (guestsSection) guestsSection.style.display = this.value.includes('Yes') ? 'block' : 'none';
-            }));
+            attendanceRadios.forEach(function(radio) { 
+                radio.addEventListener('change', function() { 
+                    const guestsSection = document.getElementById('guests-section');
+                    if (guestsSection) {
+                        if (this.value.includes('Yes')) {
+                            guestsSection.style.display = 'block';
+                        } else {
+                            guestsSection.style.display = 'none';
+                        }
+                    }
+                }); 
+            });
             
+            // Toast notification
             function showToast(message, isError) {
                 const toast = document.getElementById('toast');
                 const toastMsg = document.getElementById('toast-message');
@@ -866,31 +906,47 @@
                     toast.classList.remove('bg-red-800', 'bg-accent');
                     toast.classList.add(isError ? 'bg-red-800' : 'bg-accent');
                     toast.classList.add('show');
-                    setTimeout(() => toast.classList.remove('show'), 4000);
+                    setTimeout(function() { toast.classList.remove('show'); }, 4000);
                 }
             }
             
             // WhatsApp handler
             const form = document.getElementById('rsvp-form');
-            const WHATSAPP_NUMBER = "9613985722";
+            const WHATSAPP_NUMBER = "9613985722"; // Change to your number
+            
             if (form) {
-                form.addEventListener('submit', (e) => {
+                form.addEventListener('submit', function(e) {
                     e.preventDefault();
+                    
                     const fullName = document.getElementById('rsvp-name');
                     const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
                     const guestsField = document.getElementById('rsvp-guests');
                     const messageField = document.getElementById('rsvp-message');
+                    
                     const nameValue = fullName ? fullName.value.trim() : '';
                     let guests = guestsField ? guestsField.value : '1';
                     const messageText = messageField ? messageField.value.trim() : '';
-                    if (!nameValue) { showToast('Please enter your full name', true); return; }
-                    if (!attendanceRadio) { showToast('Please select whether you will attend', true); return; }
+                    
+                    if (!nameValue) { 
+                        showToast('Please enter your full name', true); 
+                        return; 
+                    }
+                    if (!attendanceRadio) { 
+                        showToast('Please select whether you will attend', true); 
+                        return; 
+                    }
+                    
                     const attendanceResponse = attendanceRadio.value;
-                    let guestInfo = attendanceResponse.includes('Yes') ? '\n👥 *Number of Guests:* ' + guests + ' person(s) (including yourself)' : '';
+                    let guestInfo = '';
+                    if (attendanceResponse.includes('Yes')) {
+                        guestInfo = '\n👥 *Number of Guests:* ' + guests + ' person(s) (including yourself)';
+                    }
                     const optionalMsg = messageText ? '\n💬 *Message:* ' + messageText : '';
                     const whatsappMessage = '✨ *WEDDING RSVP - Elie & Sarah* ✨\n\n👤 *Guest:* ' + nameValue + '\n💌 *Response:* ' + attendanceResponse + guestInfo + optionalMsg + '\n\n📅 *Wedding Date:* August 8, 2026\n📍 *Church:* Mar Chalita, Andaket at 7:00 PM\n🎉 *Reception:* Diwan Al Wadi';
+                    
                     const encoded = encodeURIComponent(whatsappMessage);
-                    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encoded, '_blank');
+                    const whatsappUrl = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encoded;
+                    window.open(whatsappUrl, '_blank');
                     showToast('Opening WhatsApp for ' + nameValue + '...', false);
                 });
             }
@@ -898,15 +954,19 @@
             // Language toggle
             let isArabic = false;
             const toggleBtn = document.getElementById('languageToggle');
+            
             function setLanguage(arabic) { 
                 isArabic = arabic; 
                 document.body.dir = arabic ? 'rtl' : 'ltr'; 
                 if (arabic) document.body.classList.add('font-arabic'); 
                 else document.body.classList.remove('font-arabic');
-                const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-find-way,.eng-venues,.eng-ceremony-label,.eng-reception-label,.eng-directions,.eng-directions2,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text';
-                const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-find-way,.ar-venues,.ar-ceremony-label,.ar-reception-label,.ar-directions,.ar-directions2,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text';
-                document.querySelectorAll(engSelectors).forEach(el => el.classList.toggle('hidden', arabic));
-                document.querySelectorAll(arSelectors).forEach(el => el.classList.toggle('hidden', !arabic));
+                
+                const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-1,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-find-way,.eng-venues,.eng-ceremony-label,.eng-church-desc,.eng-reception-label,.eng-restaurant-desc,.eng-directions,.eng-directions2,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text';
+                const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-1,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-find-way,.ar-venues,.ar-ceremony-label,.ar-church-desc,.ar-reception-label,.ar-restaurant-desc,.ar-directions,.ar-directions2,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text';
+                
+                document.querySelectorAll(engSelectors).forEach(function(el) { el.classList.toggle('hidden', arabic); });
+                document.querySelectorAll(arSelectors).forEach(function(el) { el.classList.toggle('hidden', !arabic); });
+                
                 if (toggleBtn) {
                     const toggleText = toggleBtn.querySelector('.toggle-text');
                     const toggleIcon = toggleBtn.querySelector('.toggle-icon');
@@ -914,8 +974,13 @@
                     if (toggleIcon) toggleIcon.textContent = arabic ? '🇬🇧' : '🇦🇪';
                 }
             }
-            if (toggleBtn) toggleBtn.addEventListener('click', () => setLanguage(!isArabic));
+            
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() { setLanguage(!isArabic); });
+            }
             setLanguage(false);
+            
+            // Execute URL fill after DOM is ready
             fillFromURL();
         })();
     </script>
