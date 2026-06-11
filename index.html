@@ -317,11 +317,16 @@
             touch-action: manipulation;
         }
         
-        /* Style for readonly input to indicate it's locked but still visible */
-        input.rsvp-name-locked {
+        /* Style for readonly inputs to indicate they're locked */
+        input.rsvp-name-locked, input.rsvp-guests-locked {
             background-color: #f5f3ef;
             cursor: default;
             opacity: 0.85;
+        }
+        .guests-controls-locked button {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -636,7 +641,7 @@
         </div>
     </section>
 
-    <!-- RSVP SECTION - NAME FIELD IS NOW READ-ONLY (LOCKED) -->
+    <!-- RSVP SECTION - NAME AND GUEST COUNTER BOTH LOCKED -->
     <section id="rsvp" class="relative py-24 px-6 bg-paper/95">
         <div class="relative max-w-xl mx-auto">
             <div class="scroll-animate text-center mb-12">
@@ -649,14 +654,14 @@
             
             <form id="rsvp-form" class="scroll-animate bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-10 border border-gold-pale/30 shadow-lg">
                 <div class="space-y-5">
-                    <!-- Name field - NOW READONLY: guest cannot edit, but can see the name from URL -->
+                    <!-- Name field - LOCKED (readonly) -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-name-label">Full Name <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-2 ar-name-label hidden">الاسم الكامل <span class="text-gold">*</span></label>
                         <input type="text" id="rsvp-name" required placeholder="Your full name" class="rsvp-name-locked w-full px-4 py-3 bg-gray-100/80 border border-gold-pale/40 rounded-xl cursor-default" readonly>
                     </div>
                     
-                    <!-- Attendance radio buttons -->
+                    <!-- Attendance radio buttons - FULLY EDITABLE -->
                     <div>
                         <label class="block text-sm font-medium mb-3 eng-attend-label">Will you attend? <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-3 ar-attend-label hidden">هل ستحضر؟ <span class="text-gold">*</span></label>
@@ -680,18 +685,22 @@
                         </div>
                     </div>
                     
-                    <!-- Guests section -->
+                    <!-- Guests section - FULLY LOCKED (readonly + disabled buttons) -->
                     <div id="guests-section" style="display: none;">
                         <label class="block text-sm font-medium mb-2 eng-guests-label">Number of Guests (including yourself)</label>
                         <label class="block text-sm font-medium mb-2 ar-guests-label hidden">عدد الضيوف (بما في ذلك نفسك)</label>
-                        <div class="flex items-center gap-3">
-                            <button type="button" id="decrement-guests" class="w-10 h-10 rounded-full bg-white/80 border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center touch-manipulation"><span class="iconify" data-icon="lucide:minus" data-width="16"></span></button>
-                            <input type="number" id="rsvp-guests" value="1" min="1" max="10" class="rsvp-input w-24 text-center px-2 py-3 bg-white/70 border border-gold-pale/40 rounded-xl">
-                            <button type="button" id="increment-guests" class="w-10 h-10 rounded-full bg-white/80 border border-gold-pale/40 text-accent hover:bg-accent/10 transition-all flex items-center justify-center touch-manipulation"><span class="iconify" data-icon="lucide:plus" data-width="16"></span></button>
+                        <div class="flex items-center gap-3 guests-controls-locked">
+                            <button type="button" id="decrement-guests" class="w-10 h-10 rounded-full bg-gray-200 border border-gold-pale/40 text-accent/50 cursor-not-allowed" disabled style="pointer-events: none; opacity: 0.5;">
+                                <span class="iconify" data-icon="lucide:minus" data-width="16"></span>
+                            </button>
+                            <input type="number" id="rsvp-guests" value="1" min="1" max="10" class="rsvp-guests-locked w-24 text-center px-2 py-3 bg-gray-100/80 border border-gold-pale/40 rounded-xl cursor-default" readonly>
+                            <button type="button" id="increment-guests" class="w-10 h-10 rounded-full bg-gray-200 border border-gold-pale/40 text-accent/50 cursor-not-allowed" disabled style="pointer-events: none; opacity: 0.5;">
+                                <span class="iconify" data-icon="lucide:plus" data-width="16"></span>
+                            </button>
                         </div>
                     </div>
                     
-                    <!-- Message field -->
+                    <!-- Message field - FULLY EDITABLE -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-message-label">Message for the Couple (optional)</label>
                         <label class="block text-sm font-medium mb-2 ar-message-label hidden">رسالة للعروسين (اختياري)</label>
@@ -786,7 +795,7 @@
                 });
             }
             
-            // Auto-fill from URL parameters (name and seats) - name field is now readonly
+            // Auto-fill from URL parameters (name and seats) - both fields will be locked after fill
             function fillFromURL() {
                 try {
                     const urlParams = new URLSearchParams(window.location.search);
@@ -857,32 +866,9 @@
                 observer.observe(el); 
             });
             
-            // Guests counter
-            const guestsInput = document.getElementById('rsvp-guests');
-            const decrementBtn = document.getElementById('decrement-guests');
-            const incrementBtn = document.getElementById('increment-guests');
+            // NOTE: Guest counter buttons are now disabled and readonly - no event listeners needed as they cannot be interacted with
             
-            if (decrementBtn) {
-                decrementBtn.addEventListener('click', function() { 
-                    let val = parseInt(guestsInput ? guestsInput.value : 1); 
-                    if (val > 1 && guestsInput) guestsInput.value = val - 1; 
-                });
-            }
-            if (incrementBtn) {
-                incrementBtn.addEventListener('click', function() { 
-                    let val = parseInt(guestsInput ? guestsInput.value : 1); 
-                    if (val < 10 && guestsInput) guestsInput.value = val + 1; 
-                });
-            }
-            if (guestsInput) {
-                guestsInput.addEventListener('change', function() { 
-                    let val = parseInt(guestsInput.value); 
-                    if (isNaN(val) || val < 1) guestsInput.value = 1; 
-                    if (val > 10) guestsInput.value = 10; 
-                });
-            }
-            
-            // Show guests section based on attendance
+            // Show guests section based on attendance (section visibility still works, but counter is locked)
             const attendanceRadios = document.querySelectorAll('input[name="attendance"]');
             attendanceRadios.forEach(function(radio) { 
                 radio.addEventListener('change', function() { 
@@ -912,7 +898,7 @@
             
             // WhatsApp handler
             const form = document.getElementById('rsvp-form');
-            const WHATSAPP_NUMBER = "9613985722"; // Change to your number
+            const WHATSAPP_NUMBER = "9613985722";
             
             if (form) {
                 form.addEventListener('submit', function(e) {
