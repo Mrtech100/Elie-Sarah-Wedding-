@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Elie & Sarah — Wedding Invitation (RSVP: Attendance Only)</title>
+    <title>Elie & Sarah — Wedding Invitation (RSVP: Fixed Guest Count)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Caveat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
@@ -83,56 +82,31 @@
             border-color: #2F3E35 !important;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
-        /* Guest counter styling - minimalist but interactive */
-        .guest-counter-wrapper {
+        .guest-display-box {
             background: #F9F7F4;
             border-radius: 1.5rem;
-            padding: 0.75rem 1rem;
+            padding: 1rem;
+            text-align: center;
             border: 1px solid #E2DCD3;
         }
-        .guest-control {
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            background: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .guest-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #F4EFEA;
-            border: 1px solid #D4C9B8;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: #2F3E35;
-            cursor: pointer;
-            transition: all 0.2s;
-            user-select: none;
-        }
-        .guest-btn:active { transform: scale(0.94); background: #E6DDD0; }
-        .guest-btn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-        .guest-count-number {
-            font-size: 1.6rem;
-            font-weight: 600;
-            min-width: 48px;
-            text-align: center;
+        .guest-number-large {
+            font-size: 2rem;
+            font-weight: 700;
             font-family: 'Outfit', monospace;
             color: #2F3E35;
+            background: white;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 3rem;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 2px 5px rgba(0,0,0,0.05);
         }
-        .guest-limit-note {
+        .guest-lock-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-size: 0.7rem;
             color: #8C7B65;
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            justify-content: center;
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -167,7 +141,7 @@
         <span id="toast-message">RSVP submitted successfully!</span>
     </div>
 
-    <!-- BIBLICAL VERSE + FAMILY (unchanged) -->
+    <!-- BIBLICAL VERSE + FAMILY -->
     <div class="relative py-8 px-6 bg-paper/90 border-b border-gold-pale/30">
         <div class="max-w-4xl mx-auto text-center space-y-4">
             <p class="font-display text-base md:text-lg font-bold text-accent/80 tracking-wide eng-verse">إِذًا لَيْسَا بَعْدُ اثْنَيْنِ بَلْ جَسَدًا وَاحِدًا. فَالَّذِي جَمَعَهُ اللهُ لاَ يُفَرِّقْهُ إِنْسَانٌ.</p>
@@ -183,7 +157,7 @@
         </div>
     </div>
 
-    <!-- HERO SECTION (unchanged) -->
+    <!-- HERO SECTION -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div class="fixed inset-0 -z-10">
             <img src="image/DSC07994.JPG" alt="Wedding background" class="w-full h-full object-cover">
@@ -201,7 +175,7 @@
         </div>
     </section>
 
-    <!-- OUR STORY SECTION (unchanged) -->
+    <!-- OUR STORY SECTION -->
     <section class="relative py-24 px-6 bg-paper">
         <div class="max-w-6xl mx-auto">
             <div class="scroll-animate text-center mb-12"><p class="font-hand text-2xl text-gold mb-2 eng-story-sub">Once upon a time</p><p class="font-hand text-2xl text-gold mb-2 ar-story-sub hidden">كان يا مكان</p><h2 class="font-display text-3xl md:text-5xl tracking-tight eng-story-title">Our Story</h2><h2 class="font-display text-3xl md:text-5xl tracking-tight ar-story-title hidden">قصتنا</h2><div class="w-24 h-px bg-gold-pale/60 mx-auto mt-4"></div></div>
@@ -209,19 +183,19 @@
         </div>
     </section>
 
-    <!-- COUNTDOWN SECTION (unchanged) -->
+    <!-- COUNTDOWN SECTION -->
     <section id="countdown" class="relative py-24 px-6 bg-paper/80"><div class="max-w-4xl mx-auto text-center"><div class="scroll-animate"><p class="font-hand text-2xl text-gold mb-2 eng-countdown-label">Counting down to our day</p><p class="font-hand text-2xl text-gold mb-2 ar-countdown-label hidden">العد التنازلي ليوم زفافنا</p><h2 class="font-display text-3xl md:text-5xl tracking-tight mb-12 eng-big-day">The Big Day</h2><h2 class="font-display text-3xl md:text-5xl tracking-tight mb-12 ar-big-day hidden">اليوم الكبير</h2></div><div class="scroll-animate grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"><div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30"><span id="cd-days" class="font-display text-5xl md:text-6xl text-accent block">000</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-days">Days</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-days hidden">يوم</span></div><div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30"><span id="cd-hours" class="font-display text-5xl md:text-6xl text-accent block">00</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-hours">Hours</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-hours hidden">ساعة</span></div><div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30"><span id="cd-minutes" class="font-display text-5xl md:text-6xl text-accent block">00</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-minutes">Minutes</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-minutes hidden">دقيقة</span></div><div class="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-gold-pale/30"><span id="cd-seconds" class="font-display text-5xl md:text-6xl text-accent block">00</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block eng-seconds">Seconds</span><span class="text-gold text-xs tracking-[0.2em] uppercase mt-2 block ar-seconds hidden">ثانية</span></div></div></div></section>
 
-    <!-- EVENTS, VENUES, GIFT sections (unchanged, minimal) -->
+    <!-- EVENTS, VENUES -->
     <section class="relative py-24 px-6 bg-paper/95"><div class="max-w-5xl mx-auto"><div class="scroll-animate text-center mb-16"><p class="font-hand text-2xl text-gold mb-2 eng-celebrate">Join us for</p><p class="font-hand text-2xl text-gold mb-2 ar-celebrate hidden">انضموا إلينا</p><h2 class="font-display text-3xl md:text-5xl tracking-tight eng-celebrate-title">The Celebration</h2><h2 class="font-display text-3xl md:text-5xl tracking-tight ar-celebrate-title hidden">الاحتفال</h2></div><div class="grid md:grid-cols-2 gap-8"><div class="scroll-animate group"><div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gold-pale/30 text-center"><div class="w-16 h-16 bg-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6"><span class="iconify text-accent" data-icon="lucide:church" data-width="28"></span></div><p class="font-hand text-lg text-gold mb-1 eng-ceremony-time">7:00 PM</p><p class="font-hand text-lg text-gold mb-1 ar-ceremony-time hidden">السابعة مساءً</p><h3 class="font-display text-2xl mb-4 eng-ceremony-title">Ceremony</h3><h3 class="font-display text-2xl mb-4 ar-ceremony-title hidden">مراسم الزفاف</h3><p class="text-accent/70 text-sm leading-relaxed mb-4 eng-ceremony-location">Mar Chalita Church<br>Andaket, Akkar</p><p class="text-accent/70 text-sm leading-relaxed mb-4 ar-ceremony-location hidden">كنيسة مار شليتا<br>عندقت - عكار</p><p class="text-gold text-xs tracking-wider uppercase eng-ceremony-dress">Formal Attire</p><p class="text-gold text-xs tracking-wider uppercase ar-ceremony-dress hidden">لباس رسمي</p></div></div><div class="scroll-animate group"><div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gold-pale/30 text-center"><div class="w-16 h-16 bg-accent/5 rounded-2xl flex items-center justify-center mx-auto mb-6"><span class="iconify text-accent" data-icon="lucide:party-popper" data-width="28"></span></div><p class="font-hand text-lg text-gold mb-1 eng-party-time">After Ceremony</p><p class="font-hand text-lg text-gold mb-1 ar-party-time hidden">بعد المراسم</p><h3 class="font-display text-2xl mb-4 eng-party-title">Party & Reception</h3><h3 class="font-display text-2xl mb-4 ar-party-title hidden">حفل الاستقبال</h3><p class="text-accent/70 text-sm leading-relaxed mb-4 eng-party-location">Diwan Al Wadi Restaurant<br>Qoubaiyat, Qatlabah</p><p class="text-accent/70 text-sm leading-relaxed mb-4 ar-party-location hidden">مطعم ديوان الوادي<br>قوبيات - قطلبّة</p><p class="text-gold text-xs tracking-wider uppercase eng-party-desc">Dinner & Dancing</p><p class="text-gold text-xs tracking-wider uppercase ar-party-desc hidden">عشاء ورقص</p></div></div></div></div></section>
 
-    <!-- FIND YOUR WAY (unchanged) -->
-    <section class="relative py-24 px-6 bg-paper"><div class="max-w-5xl mx-auto"><div class="scroll-animate text-center mb-16"><p class="font-hand text-2xl text-gold mb-2 eng-find-way">Find your way</p><p class="font-hand text-2xl text-gold mb-2 ar-find-way hidden">اعرفوا الطريق</p><h2 class="font-display text-3xl md:text-5xl tracking-tight eng-venues">The Venues</h2><h2 class="font-display text-3xl md:text-5xl tracking-tight ar-venues hidden">أماكن الاحتفال</h2></div><div class="grid md:grid-cols-2 gap-8"><div>...</div></div></div></section>
+    <!-- VENUES LOCATIONS (minimal placeholder) -->
+    <section class="relative py-12 px-6 bg-paper/80"><div class="max-w-5xl mx-auto text-center text-sm text-accent/50">📍 Church & Reception maps available upon request.</div></section>
 
-    <!-- Gift Section (unchanged) -->
+    <!-- Gift Section -->
     <section class="relative py-24 px-6 bg-gradient-to-b from-paper/90 to-paper"><div class="max-w-3xl mx-auto"><div class="scroll-animate text-center mb-10"><div class="flex justify-center mb-3"><span class="iconify text-gold text-4xl animate-float" data-icon="lucide:gift"></span></div><h2 class="font-display text-3xl md:text-4xl tracking-tight eng-gift-title">Wedding list</h2><h2 class="font-display text-3xl md:text-4xl tracking-tight ar-gift-title hidden">هدية</h2></div><div class="scroll-animate gift-card bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-gold-pale/40 shadow-xl text-center"><div class="bg-paper/70 rounded-2xl p-5"><div class="flex items-center justify-center gap-2 mb-3"><span class="iconify text-gold" data-icon="lucide:gift"></span><h3 class="font-display text-xl eng-gift-account-title">Wish Account</h3><h3 class="font-display text-xl ar-gift-account-title hidden">حساب الأمنيات</h3></div><div class="space-y-3"><div class="flex justify-center p-3 bg-white/60 rounded-xl"><span class="font-display text-3xl md:text-4xl text-gold font-bold tracking-wider">71976509</span></div></div></div></div></div></section>
 
-    <!-- RSVP SECTION: locked name + guest counter (+/- buttons with max limit from URL) + attendance + message -->
+    <!-- RSVP SECTION: Locked name, Fixed guest count from URL (display only, no +/-) -->
     <section id="rsvp" class="relative py-24 px-6 bg-paper/95">
         <div class="relative max-w-xl mx-auto">
             <div class="scroll-animate text-center mb-12">
@@ -234,34 +208,30 @@
             
             <form id="rsvp-form" class="scroll-animate bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-10 border border-gold-pale/30 shadow-lg">
                 <div class="space-y-5">
-                    <!-- Locked Name -->
+                    <!-- Locked Name Field -->
                     <div>
                         <label class="block text-sm font-medium mb-2 eng-name-label">Full Name <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-2 ar-name-label hidden">الاسم الكامل <span class="text-gold">*</span></label>
-                        <input type="text" id="rsvp-name" required class="rsvp-input w-full px-4 py-3 bg-white/70 border border-gold-pale/40 rounded-xl locked-field" readonly>
+                        <input type="text" id="rsvp-name" required placeholder="Your full name" class="rsvp-input w-full px-4 py-3 bg-white/70 border border-gold-pale/40 rounded-xl locked-field" readonly>
                         <div class="readonly-hint"><span class="iconify" data-icon="lucide:lock"></span><span class="eng-name-locked">Name locked as per invitation</span><span class="ar-name-locked hidden">الاسم مقفل حسب الدعوة</span></div>
                     </div>
-                    
-                    <!-- Guest Counter (increment/decrement with max limit from URL 'seats') -->
-                    <div id="guests-counter-container">
+
+                    <!-- Fixed Guest Count (display only, pre-set from URL 'seats', no editing) -->
+                    <div id="guests-fixed-container">
                         <label class="block text-sm font-medium mb-2 eng-guests-label">Total guests (including yourself)</label>
                         <label class="block text-sm font-medium mb-2 ar-guests-label hidden">عدد الضيوف (بما في ذلك نفسك)</label>
-                        <div class="guest-counter-wrapper flex flex-col items-center">
-                            <div class="guest-control">
-                                <button type="button" id="guest-decrement" class="guest-btn">−</button>
-                                <span id="guest-count-display" class="guest-count-number">1</span>
-                                <button type="button" id="guest-increment" class="guest-btn">+</button>
-                            </div>
-                            <div class="guest-limit-note">
-                                <span class="iconify" data-icon="lucide:users"></span>
-                                <span class="eng-guest-limit">Maximum allowed for your party</span>
-                                <span class="ar-guest-limit hidden">الحد الأقصى لدعوتكم</span>
+                        <div class="guest-display-box">
+                            <div class="guest-number-large" id="guest-count-display">1</div>
+                            <div class="guest-lock-icon">
+                                <span class="iconify" data-icon="lucide:lock"></span>
+                                <span class="eng-guest-fixed">Pre-set according to invitation</span>
+                                <span class="ar-guest-fixed hidden">محدد مسبقاً حسب الدعوة</span>
                             </div>
                         </div>
                         <input type="hidden" id="rsvp-guests" value="1">
                     </div>
                     
-                    <!-- Attendance (Yes/No) -->
+                    <!-- Attendance Radio -->
                     <div>
                         <label class="block text-sm font-medium mb-3 eng-attend-label">Will you attend? <span class="text-gold">*</span></label>
                         <label class="block text-sm font-medium mb-3 ar-attend-label hidden">هل ستحضر؟ <span class="text-gold">*</span></label>
@@ -292,7 +262,6 @@
 
     <script>
         (function() {
-            // Music & overlay
             const audio = document.getElementById('bg-music');
             const musicBtn = document.getElementById('music-toggle');
             const musicIcon = document.getElementById('music-icon');
@@ -307,12 +276,12 @@
             const enterBtn = document.getElementById('enterButton');
             if(enterBtn) enterBtn.addEventListener('click', (e) => { e.stopPropagation(); dismissOverlay(); });
             
-            // Get URL params: name (locked) & seats (max limit)
+            // Get URL params: name & seats (display only)
             function getUrlParams() {
                 const params = new URLSearchParams(window.location.search);
                 return {
                     name: params.get('name') ? decodeURIComponent(params.get('name')).trim() : null,
-                    maxSeats: params.get('seats') ? parseInt(params.get('seats'), 10) : null
+                    fixedGuests: params.get('seats') ? parseInt(params.get('seats'), 10) : null
                 };
             }
             const urlData = getUrlParams();
@@ -323,53 +292,17 @@
                 nameInput.classList.add('locked-field');
             }
             
-            // Guest counter logic with max limit
-            let currentGuests = 1;
-            let maxGuestsAllowed = 1;
-            if(urlData.maxSeats && !isNaN(urlData.maxSeats) && urlData.maxSeats >= 1) {
-                maxGuestsAllowed = Math.min(urlData.maxSeats, 20);
+            let guestCount = 1;
+            if(urlData.fixedGuests && !isNaN(urlData.fixedGuests) && urlData.fixedGuests >= 1) {
+                guestCount = Math.min(urlData.fixedGuests, 20);
             } else {
-                maxGuestsAllowed = 1;
+                guestCount = 1;
             }
-            const guestDisplay = document.getElementById('guest-count-display');
-            const guestHidden = document.getElementById('rsvp-guests');
-            const decrementBtn = document.getElementById('guest-decrement');
-            const incrementBtn = document.getElementById('guest-increment');
+            const guestDisplaySpan = document.getElementById('guest-count-display');
+            const guestHiddenInput = document.getElementById('rsvp-guests');
+            if(guestDisplaySpan) guestDisplaySpan.innerText = guestCount;
+            if(guestHiddenInput) guestHiddenInput.value = guestCount;
             
-            function updateGuestUI() {
-                if(guestDisplay) guestDisplay.innerText = currentGuests;
-                if(guestHidden) guestHidden.value = currentGuests;
-                if(decrementBtn) {
-                    if(currentGuests <= 1) decrementBtn.classList.add('disabled');
-                    else decrementBtn.classList.remove('disabled');
-                }
-                if(incrementBtn) {
-                    if(currentGuests >= maxGuestsAllowed) incrementBtn.classList.add('disabled');
-                    else incrementBtn.classList.remove('disabled');
-                }
-            }
-            
-            if(decrementBtn) decrementBtn.addEventListener('click', () => {
-                if(currentGuests > 1) {
-                    currentGuests--;
-                    updateGuestUI();
-                }
-            });
-            if(incrementBtn) incrementBtn.addEventListener('click', () => {
-                if(currentGuests < maxGuestsAllowed) {
-                    currentGuests++;
-                    updateGuestUI();
-                }
-            });
-            updateGuestUI();
-            
-            // Limit hint text show maximum
-            const limitHintSpan = document.querySelector('.guest-limit-note span:not(.iconify)');
-            if(limitHintSpan && maxGuestsAllowed) {
-                limitHintSpan.innerHTML = limitHintSpan.innerHTML + ` (${maxGuestsAllowed})`;
-            }
-            
-            // Toast helper
             function showToast(message, isError) { 
                 const toast = document.getElementById('toast'); 
                 const toastMsg = document.getElementById('toast-message'); 
@@ -382,7 +315,6 @@
                 } 
             }
             
-            // WhatsApp submission (includes guest count and attendance)
             const form = document.getElementById('rsvp-form');
             const WHATSAPP_NUMBER = "9613985722";
             if(form) {
@@ -390,12 +322,12 @@
                     e.preventDefault();
                     const fullName = document.getElementById('rsvp-name').value.trim();
                     const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
-                    const guestsCount = currentGuests;
+                    const finalGuests = guestCount;
                     const messageText = document.getElementById('rsvp-message').value.trim();
                     if(!fullName) { showToast('Please enter your full name', true); return; }
                     if(!attendanceRadio) { showToast('Please select whether you will attend', true); return; }
                     const attendanceResponse = attendanceRadio.value;
-                    const guestLine = `\n👥 *Total Guests:* ${guestsCount} person(s) (including yourself)`;
+                    const guestLine = `\n👥 *Total Guests:* ${finalGuests} person(s) (including yourself)`;
                     const optionalMsg = messageText ? `\n💬 *Message:* ${messageText}` : '';
                     const whatsappMessage = `✨ *WEDDING RSVP - Elie & Sarah* ✨\n\n👤 *Guest:* ${fullName}\n💌 *Response:* ${attendanceResponse}${guestLine}${optionalMsg}\n\n📅 *Wedding Date:* August 8, 2026\n📍 *Church:* Mar Chalita, Andaket at 7:00 PM\n🎉 *Reception:* Diwan Al Wadi`;
                     const encoded = encodeURIComponent(whatsappMessage);
@@ -404,29 +336,18 @@
                 });
             }
             
-            // Countdown
             function updateCountdown() { 
                 const wedding = new Date('2026-08-08T18:00:00'); 
                 const now = new Date(); 
                 const diff = wedding - now; 
-                if(diff <= 0) { 
-                    if(document.getElementById('cd-days')) document.getElementById('cd-days').textContent='🎉';
-                    if(document.getElementById('cd-hours')) document.getElementById('cd-hours').textContent='🎉';
-                    if(document.getElementById('cd-minutes')) document.getElementById('cd-minutes').textContent='🎉';
-                    if(document.getElementById('cd-seconds')) document.getElementById('cd-seconds').textContent='🎉';
-                    return; 
-                } 
-                const days = Math.floor(diff/(86400000)); 
-                const hours = Math.floor((diff%86400000)/3600000); 
-                const minutes = Math.floor((diff%3600000)/60000); 
-                const seconds = Math.floor((diff%60000)/1000);
+                if(diff <= 0) { if(document.getElementById('cd-days')) document.getElementById('cd-days').textContent='🎉'; if(document.getElementById('cd-hours')) document.getElementById('cd-hours').textContent='🎉'; if(document.getElementById('cd-minutes')) document.getElementById('cd-minutes').textContent='🎉'; if(document.getElementById('cd-seconds')) document.getElementById('cd-seconds').textContent='🎉'; return; } 
+                const days = Math.floor(diff/(86400000)); const hours = Math.floor((diff%86400000)/3600000); const minutes = Math.floor((diff%3600000)/60000); const seconds = Math.floor((diff%60000)/1000);
                 if(document.getElementById('cd-days')) document.getElementById('cd-days').textContent = days;
                 if(document.getElementById('cd-hours')) document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
                 if(document.getElementById('cd-minutes')) document.getElementById('cd-minutes').textContent = String(minutes).padStart(2,'0');
                 if(document.getElementById('cd-seconds')) document.getElementById('cd-seconds').textContent = String(seconds).padStart(2,'0');
             }
-            updateCountdown(); 
-            setInterval(updateCountdown, 1000);
+            updateCountdown(); setInterval(updateCountdown, 1000);
             
             const observer = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
             document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
@@ -436,8 +357,8 @@
             function setLanguage(arabic) { 
                 isArabic = arabic; document.body.dir = arabic ? 'rtl' : 'ltr'; 
                 if(arabic) document.body.classList.add('font-arabic'); else document.body.classList.remove('font-arabic');
-                const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-find-way,.eng-venues,.eng-ceremony-label,.eng-reception-label,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text,.eng-name-locked,.eng-guest-limit';
-                const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-1,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-find-way,.ar-venues,.ar-ceremony-label,.ar-reception-label,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text,.ar-name-locked,.ar-guest-limit';
+                const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text,.eng-name-locked,.eng-guest-fixed';
+                const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-1,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text,.ar-name-locked,.ar-guest-fixed';
                 document.querySelectorAll(engSelectors).forEach(el => el.classList.toggle('hidden', arabic));
                 document.querySelectorAll(arSelectors).forEach(el => el.classList.toggle('hidden', !arabic));
                 if(toggleBtn) { const txt = toggleBtn.querySelector('.toggle-text'); const icon = toggleBtn.querySelector('.toggle-icon'); if(txt) txt.textContent = arabic ? 'English' : 'عربي'; if(icon) icon.textContent = arabic ? '🇬🇧' : '🇦🇪'; }
@@ -448,4 +369,3 @@
     </script>
 </body>
 </html>
-
