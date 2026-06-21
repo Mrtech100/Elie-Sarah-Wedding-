@@ -80,6 +80,21 @@
         img {
             background: #f0ede8;
         }
+        
+        /* Music button pulse animation */
+        @keyframes pulse-music {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(47, 62, 53, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(47, 62, 53, 0); }
+        }
+        .music-pulse {
+            animation: pulse-music 2s infinite;
+        }
+        .music-btn-off {
+            opacity: 0.7;
+        }
+        .music-btn-on {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-paper font-sans text-accent overflow-x-hidden" dir="ltr">
@@ -94,13 +109,16 @@
         </div>
     </div>
 
+    <!-- Audio with multiple formats for better compatibility -->
     <audio id="bg-music" loop preload="auto">
         <source src="wedding-song.mp3" type="audio/mpeg">
+        <source src="wedding-song.ogg" type="audio/ogg">
+        <source src="wedding-song.wav" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
 
-    <button id="music-toggle" class="fixed bottom-6 left-6 z-[100] bg-accent/90 backdrop-blur-sm text-paper w-12 h-12 rounded-full flex items-center justify-center shadow-lg group" aria-label="Toggle music">
-        <span id="music-icon" class="iconify text-xl" data-icon="lucide:volume-2" data-width="22"></span>
+    <button id="music-toggle" class="fixed bottom-6 left-6 z-[100] bg-accent/90 backdrop-blur-sm text-paper w-12 h-12 rounded-full flex items-center justify-center shadow-lg group music-btn-off" aria-label="Toggle music">
+        <span id="music-icon" class="iconify text-xl" data-icon="lucide:volume-x" data-width="22"></span>
     </button>
 
     <button id="languageToggle" class="lang-toggle">
@@ -303,25 +321,71 @@
             const musicIcon = document.getElementById('music-icon');
             const welcomeOverlay = document.getElementById('welcomeOverlay');
             let isMusicPlaying = false;
-            let musicAttempted = false;
+            let musicStarted = false;
 
             if (audio) {
                 audio.volume = 0.25;
-                // Preload: attempt to load metadata
+                // Force load the audio
                 audio.load();
+                
+                // Log when audio is ready
+                audio.addEventListener('canplaythrough', function() {
+                    console.log('Audio is ready to play');
+                });
+                
+                audio.addEventListener('error', function(e) {
+                    console.error('Audio error:', e);
+                    console.log('Attempting to play anyway...');
+                });
             }
 
             function startMusic() {
-                if (!audio) return;
+                if (!audio) {
+                    console.error('Audio element not found');
+                    return;
+                }
                 if (isMusicPlaying) return;
-                audio.play().then(() => {
-                    isMusicPlaying = true;
-                    if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
-                }).catch(err => {
-                    console.log('Music autoplay blocked:', err);
-                    // show that music is muted, user must click
-                    if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
-                });
+                
+                // Reset and try to play
+                audio.currentTime = 0;
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isMusicPlaying = true;
+                        musicStarted = true;
+                        if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
+                        if (musicBtn) {
+                            musicBtn.classList.remove('music-btn-off');
+                            musicBtn.classList.add('music-btn-on');
+                        }
+                        console.log('Music started successfully');
+                    }).catch(err => {
+                        console.log('Music autoplay blocked:', err);
+                        // Show muted state
+                        if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
+                        if (musicBtn) {
+                            musicBtn.classList.add('music-btn-off');
+                            musicBtn.classList.remove('music-btn-on');
+                        }
+                        // Try one more time with user interaction
+                        document.addEventListener('click', function playOnClick() {
+                            if (!isMusicPlaying) {
+                                audio.play().then(() => {
+                                    isMusicPlaying = true;
+                                    musicStarted = true;
+                                    if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
+                                    if (musicBtn) {
+                                        musicBtn.classList.remove('music-btn-off');
+                                        musicBtn.classList.add('music-btn-on');
+                                    }
+                                    console.log('Music started on user click');
+                                }).catch(e => console.log('Still blocked:', e));
+                            }
+                            document.removeEventListener('click', playOnClick);
+                        }, { once: true });
+                    });
+                }
             }
 
             function stopMusic() {
@@ -330,6 +394,11 @@
                 audio.pause();
                 isMusicPlaying = false;
                 if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
+                if (musicBtn) {
+                    musicBtn.classList.add('music-btn-off');
+                    musicBtn.classList.remove('music-btn-on');
+                }
+                console.log('Music stopped');
             }
 
             function toggleMusic() {
@@ -368,6 +437,14 @@
                 e.stopPropagation();
                 dismissOverlay();
             });
+
+            // Try to start music on any user interaction if not started
+            document.addEventListener('click', function firstInteraction() {
+                if (!musicStarted) {
+                    startMusic();
+                }
+                document.removeEventListener('click', firstInteraction);
+            }, { once: true });
 
             // ----- URL PARAMS: name and seats -----
             const urlParams = new URLSearchParams(window.location.search);
