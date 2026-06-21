@@ -28,9 +28,11 @@
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } 45% { transform: scale(1.1); } }
+        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .animate-fade-up { animation: fadeUp 0.6s ease-out forwards; }
         .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
         .animate-heartbeat { animation: heartbeat 2s ease-in-out infinite; }
+        .animate-spin-slow { animation: spin-slow 8s linear infinite; }
         .delay-100 { animation-delay: 100ms; }
         .delay-300 { animation-delay: 300ms; }
         .delay-400 { animation-delay: 400ms; }
@@ -64,6 +66,25 @@
         body[dir="rtl"] .drop-cap::first-letter { float: right; margin-left: 0.5rem; margin-right: 0; }
         .attendance-option .peer:checked + div { background-color: #2F3E35 !important; color: #F4EFEA !important; border-color: #2F3E35 !important; }
         
+        /* Music button styles */
+        .music-btn {
+            transition: all 0.3s ease;
+        }
+        .music-btn.playing {
+            background: #2F3E35 !important;
+            box-shadow: 0 0 0 0 rgba(47, 62, 53, 0.4);
+            animation: pulse-music 2s infinite;
+        }
+        .music-btn.paused {
+            background: rgba(47, 62, 53, 0.7) !important;
+            opacity: 0.7;
+        }
+        @keyframes pulse-music {
+            0% { box-shadow: 0 0 0 0 rgba(47, 62, 53, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(47, 62, 53, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(47, 62, 53, 0); }
+        }
+        
         /* Image loading placeholder */
         .image-placeholder {
             background: #f0ede8;
@@ -80,21 +101,6 @@
         img {
             background: #f0ede8;
         }
-        
-        /* Music button pulse animation */
-        @keyframes pulse-music {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(47, 62, 53, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(47, 62, 53, 0); }
-        }
-        .music-pulse {
-            animation: pulse-music 2s infinite;
-        }
-        .music-btn-off {
-            opacity: 0.7;
-        }
-        .music-btn-on {
-            opacity: 1;
-        }
     </style>
 </head>
 <body class="bg-paper font-sans text-accent overflow-x-hidden" dir="ltr">
@@ -104,21 +110,23 @@
             <div class="text-6xl mb-4">💝</div>
             <h2 class="font-display text-2xl text-accent mb-2" style="font-family: 'Playfair Display', serif;">Elie & Sarah</h2>
             <p class="text-gold font-hand text-lg mb-4" style="font-family: 'Caveat', cursive;">Welcome to our wedding</p>
-            <p class="text-accent/70 text-sm mb-6">Tap anywhere to begin the experience<br>and enjoy the music 🎵</p>
+            <p class="text-accent/70 text-sm mb-6">Tap anywhere to begin the experience<br>🎵 Click the music button to play</p>
             <button id="enterButton" class="bg-accent text-paper px-8 py-3 rounded-full font-medium">Enter</button>
         </div>
     </div>
 
-    <!-- Audio with multiple formats for better compatibility -->
-    <audio id="bg-music" loop preload="auto">
+    <!-- Audio with multiple formats -->
+    <audio id="bg-music" loop preload="auto" crossorigin="anonymous">
         <source src="wedding-song.mp3" type="audio/mpeg">
         <source src="wedding-song.ogg" type="audio/ogg">
         <source src="wedding-song.wav" type="audio/wav">
         Your browser does not support the audio element.
     </audio>
 
-    <button id="music-toggle" class="fixed bottom-6 left-6 z-[100] bg-accent/90 backdrop-blur-sm text-paper w-12 h-12 rounded-full flex items-center justify-center shadow-lg group music-btn-off" aria-label="Toggle music">
-        <span id="music-icon" class="iconify text-xl" data-icon="lucide:volume-x" data-width="22"></span>
+    <!-- Music Toggle Button -->
+    <button id="music-toggle" class="music-btn paused fixed bottom-6 left-6 z-[100] text-paper w-14 h-14 rounded-full flex items-center justify-center shadow-lg group" aria-label="Toggle music" style="background: rgba(47, 62, 53, 0.7);">
+        <span id="music-icon" class="iconify text-2xl" data-icon="lucide:music" data-width="28"></span>
+        <span id="music-status" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 border-2 border-white"></span>
     </button>
 
     <button id="languageToggle" class="lang-toggle">
@@ -315,101 +323,63 @@
 
     <script>
         (function() {
-            // ----- MUSIC FIX -----
+            // ----- SIMPLE MUSIC CONTROL -----
             const audio = document.getElementById('bg-music');
             const musicBtn = document.getElementById('music-toggle');
             const musicIcon = document.getElementById('music-icon');
-            const welcomeOverlay = document.getElementById('welcomeOverlay');
-            let isMusicPlaying = false;
-            let musicStarted = false;
+            const musicStatus = document.getElementById('music-status');
+            let isPlaying = false;
 
             if (audio) {
-                audio.volume = 0.25;
-                // Force load the audio
+                audio.volume = 0.3;
                 audio.load();
-                
-                // Log when audio is ready
-                audio.addEventListener('canplaythrough', function() {
-                    console.log('Audio is ready to play');
-                });
-                
-                audio.addEventListener('error', function(e) {
-                    console.error('Audio error:', e);
-                    console.log('Attempting to play anyway...');
-                });
-            }
 
-            function startMusic() {
-                if (!audio) {
-                    console.error('Audio element not found');
-                    return;
-                }
-                if (isMusicPlaying) return;
-                
-                // Reset and try to play
-                audio.currentTime = 0;
-                const playPromise = audio.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        isMusicPlaying = true;
-                        musicStarted = true;
-                        if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
-                        if (musicBtn) {
-                            musicBtn.classList.remove('music-btn-off');
-                            musicBtn.classList.add('music-btn-on');
-                        }
-                        console.log('Music started successfully');
-                    }).catch(err => {
-                        console.log('Music autoplay blocked:', err);
-                        // Show muted state
-                        if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
-                        if (musicBtn) {
-                            musicBtn.classList.add('music-btn-off');
-                            musicBtn.classList.remove('music-btn-on');
-                        }
-                        // Try one more time with user interaction
-                        document.addEventListener('click', function playOnClick() {
-                            if (!isMusicPlaying) {
-                                audio.play().then(() => {
-                                    isMusicPlaying = true;
-                                    musicStarted = true;
-                                    if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
-                                    if (musicBtn) {
-                                        musicBtn.classList.remove('music-btn-off');
-                                        musicBtn.classList.add('music-btn-on');
-                                    }
-                                    console.log('Music started on user click');
-                                }).catch(e => console.log('Still blocked:', e));
-                            }
-                            document.removeEventListener('click', playOnClick);
-                        }, { once: true });
-                    });
-                }
-            }
-
-            function stopMusic() {
-                if (!audio) return;
-                if (!isMusicPlaying) return;
-                audio.pause();
-                isMusicPlaying = false;
-                if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
-                if (musicBtn) {
-                    musicBtn.classList.add('music-btn-off');
-                    musicBtn.classList.remove('music-btn-on');
-                }
-                console.log('Music stopped');
+                // Log audio events for debugging
+                audio.addEventListener('canplaythrough', () => console.log('✅ Audio ready'));
+                audio.addEventListener('error', (e) => console.error('❌ Audio error:', e));
+                audio.addEventListener('ended', () => console.log('Audio ended'));
             }
 
             function toggleMusic() {
-                if (isMusicPlaying) {
-                    stopMusic();
+                if (!audio) return;
+
+                if (isPlaying) {
+                    // Pause
+                    audio.pause();
+                    isPlaying = false;
+                    musicBtn.className = 'music-btn paused fixed bottom-6 left-6 z-[100] text-paper w-14 h-14 rounded-full flex items-center justify-center shadow-lg group';
+                    musicBtn.style.background = 'rgba(47, 62, 53, 0.7)';
+                    musicIcon.setAttribute('data-icon', 'lucide:music');
+                    musicStatus.className = 'absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 border-2 border-white';
+                    console.log('⏸️ Music paused');
                 } else {
-                    startMusic();
+                    // Play
+                    audio.currentTime = 0;
+                    const playPromise = audio.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            isPlaying = true;
+                            musicBtn.className = 'music-btn playing fixed bottom-6 left-6 z-[100] text-paper w-14 h-14 rounded-full flex items-center justify-center shadow-lg group';
+                            musicBtn.style.background = '#2F3E35';
+                            musicIcon.setAttribute('data-icon', 'lucide:volume-2');
+                            musicStatus.className = 'absolute -top-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white animate-pulse';
+                            console.log('▶️ Music playing');
+                        }).catch(err => {
+                            console.error('❌ Playback failed:', err);
+                            showToast('⚠️ Please click the music button to play');
+                            // Reset button state
+                            musicBtn.className = 'music-btn paused fixed bottom-6 left-6 z-[100] text-paper w-14 h-14 rounded-full flex items-center justify-center shadow-lg group';
+                            musicBtn.style.background = 'rgba(47, 62, 53, 0.7)';
+                            musicIcon.setAttribute('data-icon', 'lucide:music');
+                            musicStatus.className = 'absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 border-2 border-white';
+                            isPlaying = false;
+                        });
+                    }
                 }
             }
 
-            // Music button event
+            // Music button click
             if (musicBtn) {
                 musicBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -417,7 +387,8 @@
                 });
             }
 
-            // Dismiss overlay and start music
+            // Welcome overlay - just dismiss, don't auto-play
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
             function dismissOverlay() {
                 if (welcomeOverlay) {
                     welcomeOverlay.style.opacity = '0';
@@ -425,11 +396,8 @@
                         welcomeOverlay.style.display = 'none';
                     }, 500);
                 }
-                // Try to start music when overlay is dismissed
-                startMusic();
             }
 
-            // Welcome overlay click and enter button
             if (welcomeOverlay) {
                 welcomeOverlay.addEventListener('click', dismissOverlay);
             }
@@ -438,13 +406,16 @@
                 dismissOverlay();
             });
 
-            // Try to start music on any user interaction if not started
-            document.addEventListener('click', function firstInteraction() {
-                if (!musicStarted) {
-                    startMusic();
+            // ----- TOAST -----
+            function showToast(msg) {
+                const toast = document.getElementById('toast');
+                const toastMsg = document.getElementById('toast-message');
+                if (toast && toastMsg) {
+                    toastMsg.textContent = msg;
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 4000);
                 }
-                document.removeEventListener('click', firstInteraction);
-            }, { once: true });
+            }
 
             // ----- URL PARAMS: name and seats -----
             const urlParams = new URLSearchParams(window.location.search);
@@ -494,17 +465,6 @@
                 };
             }
             updateGuestUI();
-
-            // ----- TOAST -----
-            function showToast(msg) {
-                const toast = document.getElementById('toast');
-                const toastMsg = document.getElementById('toast-message');
-                if (toast && toastMsg) {
-                    toastMsg.textContent = msg;
-                    toast.classList.add('show');
-                    setTimeout(() => toast.classList.remove('show'), 4000);
-                }
-            }
 
             // ----- RSVP FORM -----
             document.getElementById('rsvp-form')?.addEventListener('submit', function(e) {
@@ -575,6 +535,8 @@
                 });
             }
             setLanguage(false);
+
+            console.log('🎵 Wedding invitation loaded. Click the music button to play.');
         })();
     </script>
 </body>
