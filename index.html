@@ -94,11 +94,12 @@
         </div>
     </div>
 
-    <audio id="bg-music" loop preload="metadata">
+    <audio id="bg-music" loop preload="auto">
         <source src="wedding-song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
     </audio>
 
-    <button id="music-toggle" class="fixed bottom-6 left-6 z-[100] bg-accent/90 backdrop-blur-sm text-paper w-12 h-12 rounded-full flex items-center justify-center shadow-lg group">
+    <button id="music-toggle" class="fixed bottom-6 left-6 z-[100] bg-accent/90 backdrop-blur-sm text-paper w-12 h-12 rounded-full flex items-center justify-center shadow-lg group" aria-label="Toggle music">
         <span id="music-icon" class="iconify text-xl" data-icon="lucide:volume-2" data-width="22"></span>
     </button>
 
@@ -296,89 +297,206 @@
 
     <script>
         (function() {
+            // ----- MUSIC FIX -----
             const audio = document.getElementById('bg-music');
             const musicBtn = document.getElementById('music-toggle');
             const musicIcon = document.getElementById('music-icon');
             const welcomeOverlay = document.getElementById('welcomeOverlay');
             let isMusicPlaying = false;
-            if(audio) audio.volume = 0.25;
-            function startMusic() { if (!isMusicPlaying && audio) { audio.play().then(() => { isMusicPlaying = true; if(musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2'); }).catch(e=>console.log); } }
-            function stopMusic() { if(isMusicPlaying && audio) { audio.pause(); isMusicPlaying = false; if(musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x'); } }
-            if(musicBtn) musicBtn.addEventListener('click', (e) => { e.stopPropagation(); isMusicPlaying ? stopMusic() : startMusic(); });
-            function dismissOverlay() { startMusic(); if(welcomeOverlay) { welcomeOverlay.style.opacity = '0'; setTimeout(() => { welcomeOverlay.style.display = 'none'; }, 500); } }
-            if(welcomeOverlay) welcomeOverlay.addEventListener('click', dismissOverlay);
-            document.getElementById('enterButton')?.addEventListener('click', (e) => { e.stopPropagation(); dismissOverlay(); });
-            
+            let musicAttempted = false;
+
+            if (audio) {
+                audio.volume = 0.25;
+                // Preload: attempt to load metadata
+                audio.load();
+            }
+
+            function startMusic() {
+                if (!audio) return;
+                if (isMusicPlaying) return;
+                audio.play().then(() => {
+                    isMusicPlaying = true;
+                    if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
+                }).catch(err => {
+                    console.log('Music autoplay blocked:', err);
+                    // show that music is muted, user must click
+                    if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
+                });
+            }
+
+            function stopMusic() {
+                if (!audio) return;
+                if (!isMusicPlaying) return;
+                audio.pause();
+                isMusicPlaying = false;
+                if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
+            }
+
+            function toggleMusic() {
+                if (isMusicPlaying) {
+                    stopMusic();
+                } else {
+                    startMusic();
+                }
+            }
+
+            // Music button event
+            if (musicBtn) {
+                musicBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleMusic();
+                });
+            }
+
+            // Dismiss overlay and start music
+            function dismissOverlay() {
+                if (welcomeOverlay) {
+                    welcomeOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        welcomeOverlay.style.display = 'none';
+                    }, 500);
+                }
+                // Try to start music when overlay is dismissed
+                startMusic();
+            }
+
+            // Welcome overlay click and enter button
+            if (welcomeOverlay) {
+                welcomeOverlay.addEventListener('click', dismissOverlay);
+            }
+            document.getElementById('enterButton')?.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dismissOverlay();
+            });
+
+            // ----- URL PARAMS: name and seats -----
             const urlParams = new URLSearchParams(window.location.search);
             const nameInput = document.getElementById('rsvp-name');
-            if(nameInput) {
+            if (nameInput) {
                 nameInput.value = urlParams.get('name') ? decodeURIComponent(urlParams.get('name')) : "Guest";
                 nameInput.readOnly = true;
             }
-            
+
             let maxLimit = parseInt(urlParams.get('seats')) || 1;
-            if(maxLimit < 1) maxLimit = 1;
+            if (maxLimit < 1) maxLimit = 1;
             let currentGuests = maxLimit;
             const guestDisplay = document.getElementById('guest-count-display');
             const guestHidden = document.getElementById('rsvp-guests');
             const decrementBtn = document.getElementById('guest-decrement');
             const incrementBtn = document.getElementById('guest-increment');
             const maxLimitSpan = document.getElementById('max-limit-value');
-            if(maxLimitSpan) maxLimitSpan.innerText = maxLimit;
+            if (maxLimitSpan) maxLimitSpan.innerText = maxLimit;
             const maxLimitSpanAr = document.getElementById('max-limit-value-ar');
-            if(maxLimitSpanAr) maxLimitSpanAr.innerText = maxLimit;
-            
+            if (maxLimitSpanAr) maxLimitSpanAr.innerText = maxLimit;
+
             function updateGuestUI() {
-                if(guestDisplay) guestDisplay.innerText = currentGuests;
-                if(guestHidden) guestHidden.value = currentGuests;
-                if(decrementBtn) currentGuests <= 1 ? decrementBtn.classList.add('disabled') : decrementBtn.classList.remove('disabled');
-                if(incrementBtn) currentGuests >= maxLimit ? incrementBtn.classList.add('disabled') : incrementBtn.classList.remove('disabled');
+                if (guestDisplay) guestDisplay.innerText = currentGuests;
+                if (guestHidden) guestHidden.value = currentGuests;
+                if (decrementBtn) {
+                    currentGuests <= 1 ? decrementBtn.classList.add('disabled') : decrementBtn.classList.remove('disabled');
+                }
+                if (incrementBtn) {
+                    currentGuests >= maxLimit ? incrementBtn.classList.add('disabled') : incrementBtn.classList.remove('disabled');
+                }
             }
-            if(decrementBtn) decrementBtn.onclick = () => { if(currentGuests > 1) { currentGuests--; updateGuestUI(); } };
-            if(incrementBtn) incrementBtn.onclick = () => { if(currentGuests < maxLimit) { currentGuests++; updateGuestUI(); } };
+
+            if (decrementBtn) {
+                decrementBtn.onclick = function() {
+                    if (currentGuests > 1) {
+                        currentGuests--;
+                        updateGuestUI();
+                    }
+                };
+            }
+            if (incrementBtn) {
+                incrementBtn.onclick = function() {
+                    if (currentGuests < maxLimit) {
+                        currentGuests++;
+                        updateGuestUI();
+                    }
+                };
+            }
             updateGuestUI();
-            
-            function showToast(msg, isErr) { 
-                const toast = document.getElementById('toast'), toastMsg = document.getElementById('toast-message');
-                if(toast && toastMsg) { toastMsg.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 4000); } 
+
+            // ----- TOAST -----
+            function showToast(msg) {
+                const toast = document.getElementById('toast');
+                const toastMsg = document.getElementById('toast-message');
+                if (toast && toastMsg) {
+                    toastMsg.textContent = msg;
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 4000);
+                }
             }
-            
+
+            // ----- RSVP FORM -----
             document.getElementById('rsvp-form')?.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('rsvp-name').value.trim();
                 const attendance = document.querySelector('input[name="attendance"]:checked');
                 const msg = document.getElementById('rsvp-message').value.trim();
-                if(!name) { showToast('Please enter your name', true); return; }
-                if(!attendance) { showToast('Please select attendance', true); return; }
+                if (!name) {
+                    showToast('Please enter your name');
+                    return;
+                }
+                if (!attendance) {
+                    showToast('Please select attendance');
+                    return;
+                }
                 const waMsg = `✨ WEDDING RSVP ✨\n\n👤 Guest: ${name}\n💌 Response: ${attendance.value}\n👥 Guests: ${currentGuests}\n${msg ? '💬 Message: ' + msg : ''}`;
                 window.open('https://wa.me/9613985722?text=' + encodeURIComponent(waMsg), '_blank');
-                showToast('Opening WhatsApp...', false);
+                showToast('Opening WhatsApp...');
             });
-            
+
+            // ----- COUNTDOWN -----
             function updateCountdown() {
                 const diff = new Date('2026-08-08T18:00:00') - new Date();
-                if(diff <= 0) { ['cd-days','cd-hours','cd-minutes','cd-seconds'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).textContent='🎉'; }); return; }
-                document.getElementById('cd-days') && (document.getElementById('cd-days').textContent = Math.floor(diff/86400000));
-                document.getElementById('cd-hours') && (document.getElementById('cd-hours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0'));
-                document.getElementById('cd-minutes') && (document.getElementById('cd-minutes').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0'));
-                document.getElementById('cd-seconds') && (document.getElementById('cd-seconds').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0'));
+                if (diff <= 0) {
+                    ['cd-days','cd-hours','cd-minutes','cd-seconds'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.textContent = '🎉';
+                    });
+                    return;
+                }
+                const days = Math.floor(diff / 86400000);
+                const hours = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+                const minutes = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+                const seconds = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+                if (document.getElementById('cd-days')) document.getElementById('cd-days').textContent = days;
+                if (document.getElementById('cd-hours')) document.getElementById('cd-hours').textContent = hours;
+                if (document.getElementById('cd-minutes')) document.getElementById('cd-minutes').textContent = minutes;
+                if (document.getElementById('cd-seconds')) document.getElementById('cd-seconds').textContent = seconds;
             }
-            updateCountdown(); setInterval(updateCountdown, 1000);
-            
-            const observer = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.1 });
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // ----- SCROLL ANIMATION -----
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) e.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
             document.querySelectorAll('.scroll-animate').forEach(el => observer.observe(el));
-            
+
+            // ----- LANGUAGE TOGGLE -----
             let isArabic = false;
             const toggleBtn = document.getElementById('languageToggle');
-            function setLanguage(arabic) { 
-                isArabic = arabic; document.body.dir = arabic ? 'rtl' : 'ltr'; 
+
+            function setLanguage(arabic) {
+                isArabic = arabic;
+                document.body.dir = arabic ? 'rtl' : 'ltr';
                 const engSelectors = '.eng-verse,.eng-invite-line,.eng-family-line-2,.eng-date,.eng-venue,.eng-rsvp-link,.eng-countdown-label,.eng-big-day,.eng-days,.eng-hours,.eng-minutes,.eng-seconds,.eng-celebrate,.eng-celebrate-title,.eng-ceremony-time,.eng-ceremony-title,.eng-ceremony-location,.eng-ceremony-dress,.eng-party-time,.eng-party-title,.eng-party-location,.eng-party-desc,.eng-find-way,.eng-venues,.eng-ceremony-label,.eng-reception-label,.eng-directions,.eng-directions2,.eng-rsvp-sub,.eng-rsvp-deadline,.eng-name-label,.eng-attend-label,.eng-accept,.eng-decline,.eng-guests-label,.eng-message-label,.eng-send,.eng-footer-date,.eng-footer-love,.eng-gift-title,.eng-gift-account-title,.eng-story-sub,.eng-story-title,.eng-photo1-caption,.eng-photo2-caption,.eng-photo3-caption,.eng-story-text,.eng-name-locked,.eng-guest-limit,.eng-groom-label,.eng-groom-title,.eng-groom-addr,.eng-directions-groom,.eng-bride-label,.eng-bride-title,.eng-bride-addr,.eng-directions-bride';
                 const arSelectors = '.ar-verse,.ar-invite-line,.ar-family-line-1,.ar-family-line-2,.ar-date,.ar-venue,.ar-rsvp-link,.ar-countdown-label,.ar-big-day,.ar-days,.ar-hours,.ar-minutes,.ar-seconds,.ar-celebrate,.ar-celebrate-title,.ar-ceremony-time,.ar-ceremony-title,.ar-ceremony-location,.ar-ceremony-dress,.ar-party-time,.ar-party-title,.ar-party-location,.ar-party-desc,.ar-find-way,.ar-venues,.ar-ceremony-label,.ar-reception-label,.ar-directions,.ar-directions2,.ar-rsvp-sub,.ar-rsvp-deadline,.ar-name-label,.ar-attend-label,.ar-accept,.ar-decline,.ar-guests-label,.ar-message-label,.ar-send,.ar-footer-date,.ar-footer-love,.ar-gift-title,.ar-gift-account-title,.ar-story-sub,.ar-story-title,.ar-photo1-caption,.ar-photo2-caption,.ar-photo3-caption,.ar-story-text,.ar-name-locked,.ar-guest-limit,.ar-groom-label,.ar-groom-title,.ar-groom-addr,.ar-directions-groom,.ar-bride-label,.ar-bride-title,.ar-bride-addr,.ar-directions-bride';
                 document.querySelectorAll(engSelectors).forEach(el => el.classList.toggle('hidden', arabic));
                 document.querySelectorAll(arSelectors).forEach(el => el.classList.toggle('hidden', !arabic));
-                if(toggleBtn) toggleBtn.innerHTML = arabic ? '🇬🇧 English' : '🇦🇪 عربي';
+                if (toggleBtn) toggleBtn.innerHTML = arabic ? '🇬🇧 English' : '🇦🇪 عربي';
             }
-            if(toggleBtn) toggleBtn.addEventListener('click', () => setLanguage(!isArabic));
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    setLanguage(!isArabic);
+                });
+            }
             setLanguage(false);
         })();
     </script>
