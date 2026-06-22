@@ -94,7 +94,8 @@
         </div>
     </div>
 
-    <audio id="bg-music" loop preload="metadata">
+    <!-- MUSIC: fixed with robust autoplay + fallback -->
+    <audio id="bg-music" loop preload="auto" crossorigin="anonymous">
         <source src="wedding-song.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -297,91 +298,107 @@
 
     <script>
         (function() {
+            // --------------------------------------------------------------
+            // MUSIC FIX: robust autoplay + toggle + overlay interaction
+            // --------------------------------------------------------------
             const audio = document.getElementById('bg-music');
             const musicBtn = document.getElementById('music-toggle');
             const musicIcon = document.getElementById('music-icon');
             const welcomeOverlay = document.getElementById('welcomeOverlay');
+            const enterBtn = document.getElementById('enterButton');
+            
             let isMusicPlaying = false;
-            
-            // FIX: Ensure audio can play and handle autoplay restrictions
-            if(audio) {
+            let musicStarted = false;
+
+            // Set initial volume
+            if (audio) {
                 audio.volume = 0.25;
-                // Load the audio file explicitly
+                // Force load
                 audio.load();
-                
-                // Attempt to play on first user interaction
-                const attemptPlay = () => {
-                    if (!isMusicPlaying) {
-                        audio.play().then(() => {
-                            isMusicPlaying = true;
-                            if(musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
-                        }).catch(err => {
-                            console.log('Audio play prevented by browser, waiting for user interaction.');
-                        });
-                    }
-                };
-                
-                // Try playing on any user interaction
-                document.addEventListener('click', attemptPlay, { once: false });
-                document.addEventListener('touchstart', attemptPlay, { once: false });
-                
-                // Also try on overlay dismiss
-                const originalDismiss = dismissOverlay;
-                dismissOverlay = function() {
-                    if(welcomeOverlay) {
-                        welcomeOverlay.style.opacity = '0';
-                        setTimeout(() => { welcomeOverlay.style.display = 'none'; }, 500);
-                    }
-                    attemptPlay();
-                };
             }
-            
-            function startMusic() { 
-                if (!isMusicPlaying && audio) { 
-                    audio.play().then(() => { 
-                        isMusicPlaying = true; 
-                        if(musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2'); 
-                    }).catch(e => console.log('Playback failed:', e)); 
-                } 
-            }
-            
-            function stopMusic() { 
-                if(isMusicPlaying && audio) { 
-                    audio.pause(); 
-                    isMusicPlaying = false; 
-                    if(musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x'); 
-                } 
-            }
-            
-            if(musicBtn) musicBtn.addEventListener('click', (e) => { 
-                e.stopPropagation(); 
-                isMusicPlaying ? stopMusic() : startMusic(); 
-            });
-            
-            let dismissOverlay = function() {
-                startMusic(); 
-                if(welcomeOverlay) { 
-                    welcomeOverlay.style.opacity = '0'; 
-                    setTimeout(() => { welcomeOverlay.style.display = 'none'; }, 500); 
-                } 
-            };
-            
-            if(welcomeOverlay) welcomeOverlay.addEventListener('click', dismissOverlay);
-            document.getElementById('enterButton')?.addEventListener('click', (e) => { 
-                e.stopPropagation(); 
-                dismissOverlay(); 
-            });
-            
-            // Also try to play audio when the user taps anywhere on the page after load
-            document.addEventListener('click', function firstInteraction() {
-                if (audio && !isMusicPlaying) {
-                    audio.play().then(() => {
+
+            // Core play function with error handling
+            function startMusic() {
+                if (!audio) return;
+                if (isMusicPlaying) return;
+                
+                audio.play()
+                    .then(() => {
                         isMusicPlaying = true;
-                        if(musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
-                    }).catch(() => {});
+                        musicStarted = true;
+                        if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-2');
+                        console.log('Music started successfully');
+                    })
+                    .catch((err) => {
+                        console.warn('Autoplay blocked:', err);
+                        // We'll retry on user gesture
+                        isMusicPlaying = false;
+                        if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
+                    });
+            }
+
+            function stopMusic() {
+                if (!audio) return;
+                if (!isMusicPlaying) return;
+                audio.pause();
+                isMusicPlaying = false;
+                if (musicIcon) musicIcon.setAttribute('data-icon', 'lucide:volume-x');
+                console.log('Music paused');
+            }
+
+            // Toggle handler (button)
+            if (musicBtn) {
+                musicBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (isMusicPlaying) {
+                        stopMusic();
+                    } else {
+                        startMusic();
+                    }
+                });
+            }
+
+            // Dismiss overlay + start music
+            function dismissOverlay() {
+                if (welcomeOverlay) {
+                    welcomeOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        welcomeOverlay.style.display = 'none';
+                    }, 500);
                 }
-                document.removeEventListener('click', firstInteraction);
-            }, { once: true });
+                // Try to start music on user gesture
+                startMusic();
+            }
+
+            // Overlay click
+            if (welcomeOverlay) {
+                welcomeOverlay.addEventListener('click', dismissOverlay);
+            }
+            // Enter button click
+            if (enterBtn) {
+                enterBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dismissOverlay();
+                });
+            }
+
+            // Also start music on any user click/tap if not started yet (backup)
+            document.addEventListener('click', function() {
+                if (!musicStarted) {
+                    startMusic();
+                }
+            }, { once: false, passive: true });
+
+            // Touch events for mobile
+            document.addEventListener('touchstart', function() {
+                if (!musicStarted) {
+                    startMusic();
+                }
+            }, { once: false, passive: true });
+
+            // --------------------------------------------------------------
+            // REST OF ORIGINAL SCRIPT (RSVP, countdown, language, etc.)
+            // --------------------------------------------------------------
             
             const urlParams = new URLSearchParams(window.location.search);
             const nameInput = document.getElementById('rsvp-name');
