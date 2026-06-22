@@ -710,13 +710,13 @@
 
 
     <!-- ════════════════════════════════════════════════════════════ -->
-    <!--  JAVASCRIPT — FIXES THE MUSIC + ALL INTERACTIONS         -->
+    <!--  JAVASCRIPT — RSVP now opens WhatsApp with your number    -->
     <!-- ════════════════════════════════════════════════════════════ -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
             // ──────────────────────────────────────────────────────────
-            //  1.  MUSIC PLAYER  —  THE FIX YOU NEEDED
+            //  1.  MUSIC PLAYER
             // ──────────────────────────────────────────────────────────
             const audio = document.getElementById('bg-music');
             const musicToggle = document.getElementById('music-toggle');
@@ -724,10 +724,8 @@
             const musicStatus = document.getElementById('music-status');
             let isPlaying = false;
 
-            // Set a reasonable volume
             audio.volume = 0.6;
 
-            // Helper: update UI
             function updateMusicUI(playing) {
                 if (playing) {
                     musicToggle.classList.remove('paused');
@@ -744,14 +742,12 @@
                 }
             }
 
-            // Toggle music
             function toggleMusic() {
                 if (isPlaying) {
                     audio.pause();
                     isPlaying = false;
                     updateMusicUI(false);
                 } else {
-                    // Play with error handling
                     audio.play()
                         .then(() => {
                             isPlaying = true;
@@ -760,21 +756,19 @@
                         .catch(function(err) {
                             console.warn('Audio play blocked:', err);
                             showToast('🔊 Tap the page first to enable audio');
-                            // Keep button in paused state
                             isPlaying = false;
                             updateMusicUI(false);
                         });
                 }
             }
 
-            // Click handler for music button
             musicToggle.addEventListener('click', function(e) {
                 e.stopPropagation();
                 toggleMusic();
             });
 
             // ──────────────────────────────────────────────────────────
-            //  2.  WELCOME OVERLAY  —  starts audio on enter
+            //  2.  WELCOME OVERLAY
             // ──────────────────────────────────────────────────────────
             const welcomeOverlay = document.getElementById('welcomeOverlay');
             const enterBtn = document.getElementById('enterButton');
@@ -785,7 +779,6 @@
                     welcomeOverlay.style.display = 'none';
                 }, 500);
 
-                // Try to autoplay after user gesture (browser policy allows this)
                 if (!isPlaying) {
                     audio.play()
                         .then(() => {
@@ -794,7 +787,6 @@
                         })
                         .catch(function(err) {
                             console.log('Autoplay after welcome:', err);
-                            // User will need to click the music button
                         });
                 }
             }
@@ -818,7 +810,6 @@
                     '<span>🇬🇧 English</span>' :
                     '<span>🇦🇪 عربي</span>';
 
-                // Toggle all .eng-* and .ar-* elements
                 document.querySelectorAll('.eng-verse, .eng-family-line-2, .eng-invite-line, .eng-date, .eng-venue, .eng-rsvp-link, .eng-story-sub, .eng-story-title, .eng-photo1-caption, .eng-photo2-caption, .eng-photo3-caption, .eng-story-text, .eng-countdown-label, .eng-big-day, .eng-days, .eng-hours, .eng-minutes, .eng-seconds, .eng-celebrate, .eng-celebrate-title, .eng-ceremony-time, .eng-ceremony-title, .eng-ceremony-location, .eng-ceremony-map, .eng-reception-time, .eng-reception-title, .eng-reception-location, .eng-reception-map, .eng-rsvp-label, .eng-rsvp-title, .eng-name-label, .eng-attendance-label, .eng-guests-label, .eng-guest-note, .eng-message-label, .eng-submit-btn, .eng-footer, .eng-footer-date, .eng-rsvp-link')
                     .forEach(function(el) {
                         el.classList.toggle('hidden', isArabic);
@@ -833,7 +824,7 @@
             langToggle.addEventListener('click', toggleLanguage);
 
             // ──────────────────────────────────────────────────────────
-            //  4.  COUNTDOWN TIMER
+            //  4.  COUNTDOWN
             // ──────────────────────────────────────────────────────────
             const targetDate = new Date('2026-08-08T19:00:00+03:00').getTime();
 
@@ -857,7 +848,7 @@
             setInterval(updateCountdown, 1000);
 
             // ──────────────────────────────────────────────────────────
-            //  5.  RSVP FORM
+            //  5.  RSVP FORM  —  WhatsApp integration
             // ──────────────────────────────────────────────────────────
             const form = document.getElementById('rsvp-form');
             const guestCountSpan = document.getElementById('guest-count');
@@ -901,6 +892,9 @@
                 }, 3000);
             }
 
+            // ─── YOUR WHATSAPP NUMBER (without + or 00) ───
+            const WHATSAPP_NUMBER = '96171976509';
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
@@ -911,31 +905,27 @@
                 }
 
                 const attendance = document.querySelector('input[name="attendance"]:checked');
+                const attending = attendance ? attendance.value : 'yes';
                 const message = document.getElementById('rsvp-message').value.trim();
 
-                // Build data
-                const data = {
-                    name: name,
-                    attending: attendance ? attendance.value : 'yes',
-                    guests: guestCount,
-                    message: message || ''
-                };
+                // Build the WhatsApp message (URL encoded)
+                let text = `New RSVP!%0A`;
+                text += `Name: ${name}%0A`;
+                text += `Attending: ${attending}%0A`;
+                text += `Guests: ${guestCount}%0A`;
+                if (message) text += `Message: ${message}`;
 
-                console.log('📨 RSVP Data:', data);
+                // Open WhatsApp with pre-filled message
+                const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+                window.open(url, '_blank');
 
-                // Success toast
+                // Show confirmation
                 const isArabicNow = document.body.dir === 'rtl';
-                showToast(isArabicNow ? '✅ تم إرسال التأكيد بنجاح!' : '✅ RSVP sent successfully!');
-
-                // Optionally reset form
-                // document.getElementById('rsvp-name').value = '';
-                // document.getElementById('rsvp-message').value = '';
-                // guestCount = 2;
-                // updateGuestButtons();
+                showToast(isArabicNow ? '📱 جارٍ فتح واتساب لإرسال التأكيد' : '📱 Opening WhatsApp to send RSVP...');
             });
 
             // ──────────────────────────────────────────────────────────
-            //  6.  SCROLL ANIMATIONS (Intersection Observer)
+            //  6.  SCROLL ANIMATIONS
             // ──────────────────────────────────────────────────────────
             const scrollEls = document.querySelectorAll('.scroll-animate');
             const observer = new IntersectionObserver(function(entries) {
@@ -964,8 +954,9 @@
                 }
             });
 
-            console.log('🎵 Music player ready — click the 🎵 button or press Space to toggle.');
+            console.log('🎵 Music player ready — click the 🎵 button or press Space.');
             console.log('📅 Wedding: August 8, 2026 — Andaket, Akkar');
+            console.log('📱 RSVP responses go to WhatsApp: +96171976509');
         });
     </script>
 </body>
